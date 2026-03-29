@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travian — Calculateur d'Artéfacts</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0704;
+    --bg2: #110e09;
+    --bg3: #1a1510;
+    --gold: #c9a84c;
+    --gold2: #e8c96a;
+    --gold-dim: #7a6030;
+    --red: #8b2020;
+    --red2: #c0392b;
+    --text: #d4c4a0;
+    --text-dim: #8a7a60;
+    --border: #3a2e1e;
+    --border-gold: #5a4520;
+    --green: #2e7d4a;
+    --green2: #3daf65;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 17px;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 80% 40% at 50% 0%, #1a1005 0%, transparent 70%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* ═══ HEADER ═══ */
+  header {
+    text-align: center;
+    padding: 40px 20px 28px;
+    border-bottom: 1px solid var(--border-gold);
+    position: relative;
+    background: linear-gradient(180deg, #1a1005 0%, transparent 100%);
+  }
+  header::before, header::after {
+    content: '✦';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold-dim);
+    font-size: 22px;
+  }
+  header::before { left: 32px; }
+  header::after { right: 32px; }
+
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: 900;
+    color: var(--gold2);
+    letter-spacing: 3px;
+    text-shadow: 0 0 30px rgba(201,168,76,0.4);
+    line-height: 1.2;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  /* ═══ LAYOUT ═══ */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    padding: 28px 0;
+  }
+  @media (max-width: 700px) { .main-grid { grid-template-columns: 1fr; } }
+
+  /* ═══ PANELS ═══ */
+  .panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .panel-header {
+    background: linear-gradient(90deg, var(--bg3) 0%, #1e1810 100%);
+    border-bottom: 1px solid var(--border-gold);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .panel-header h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .panel-icon { font-size: 18px; }
+  .panel-body { padding: 18px; }
+
+  /* ═══ FORMS ═══ */
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 80px 80px auto;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .field-row-artefact {
+    display: grid;
+    grid-template-columns: 1fr 80px 80px auto;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  label {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  input[type="text"], input[type="number"], select {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 10px;
+    font-family: 'Crimson Text', serif;
+    font-size: 15px;
+    border-radius: 3px;
+    width: 100%;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  input:focus, select:focus {
+    border-color: var(--gold-dim);
+    box-shadow: 0 0 0 2px rgba(201,168,76,0.1);
+  }
+
+  .coord-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .coord-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    display: block;
+    margin-bottom: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ═══ BUTTONS ═══ */
+  .btn {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .btn-gold {
+    background: linear-gradient(135deg, #8b6914, var(--gold));
+    color: #1a1005;
+    font-weight: 700;
+  }
+  .btn-gold:hover { background: linear-gradient(135deg, var(--gold), var(--gold2)); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(201,168,76,0.3); }
+
+  .btn-red {
+    background: transparent;
+    border: 1px solid var(--red);
+    color: #c0392b;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+  .btn-red:hover { background: var(--red); color: #fff; }
+
+  .btn-add {
+    background: transparent;
+    border: 1px dashed var(--border-gold);
+    color: var(--gold-dim);
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+  }
+  .btn-add:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.05); }
+
+  .btn-calc {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    letter-spacing: 3px;
+    margin: 20px 0;
+  }
+
+  /* ═══ ENTRY ROWS ═══ */
+  .entry {
+    display: grid;
+    gap: 8px;
+    align-items: end;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    animation: fadeIn 0.2s ease;
+  }
+  .entry:last-child { border-bottom: none; margin-bottom: 0; }
+  .entry.player-entry { grid-template-columns: 1fr 100px 100px 36px; }
+  .entry.artefact-entry { grid-template-columns: 1fr 100px 100px 100px 36px; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ═══ RESULTS ═══ */
+  .results-section {
+    padding: 0 0 28px;
+  }
+  .results-panel {
+    background: var(--bg2);
+    border: 1px solid var(--border-gold);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .results-panel .panel-header {
+    background: linear-gradient(90deg, #1a1005, #221800);
+  }
+
+  .artefact-block {
+    border-bottom: 1px solid var(--border);
+    padding: 18px;
+    animation: fadeIn 0.3s ease;
+  }
+  .artefact-block:last-child { border-bottom: none; }
+
+  .artefact-title {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    color: var(--gold2);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .artefact-coords {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+
+  .ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+  .ranking-table th {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+  }
+  .ranking-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(58,46,30,0.5);
+    vertical-align: middle;
+  }
+  .ranking-table tr:last-child td { border-bottom: none; }
+  .ranking-table tr:hover td { background: rgba(201,168,76,0.04); }
+
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .rank-1 { background: linear-gradient(135deg, #8b6914, var(--gold2)); color: #1a1005; }
+  .rank-2 { background: #555; color: #ddd; }
+  .rank-3 { background: #6e3a1a; color: #e09060; }
+  .rank-other { background: var(--bg3); color: var(--text-dim); border: 1px solid var(--border); }
+
+  .dist-value {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    color: var(--gold);
+  }
+  .dist-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .dist-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  .travel-time {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .travel-fast { color: var(--green2); }
+  .travel-mid { color: var(--gold); }
+  .travel-slow { color: #c0392b; }
+
+  /* ═══ SETTINGS BAR ═══ */
+  .settings-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+  }
+  .settings-bar .field { flex: 1; min-width: 140px; }
+
+  /* ═══ EMPTY STATE ═══ */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+  .empty-state .icon { font-size: 36px; margin-bottom: 10px; opacity: 0.4; }
+
+  /* ═══ TAG BADGES ═══ */
+  .civ-badge {
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    border: 1px solid var(--border-gold);
+    color: var(--gold-dim);
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.5px;
+  }
+
+  /* ═══ ARTEFACT TYPE COLOR ═══ */
+  .type-small { color: #6aafe6; }
+  .type-large { color: #e67a6a; }
+  .type-unique { color: var(--gold2); }
+
+  .badge-size {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .badge-small { background: rgba(106,175,230,0.15); color: #6aafe6; border: 1px solid rgba(106,175,230,0.3); }
+  .badge-large { background: rgba(230,122,106,0.15); color: #e67a6a; border: 1px solid rgba(230,122,106,0.3); }
+  .badge-unique { background: rgba(201,168,76,0.15); color: var(--gold2); border: 1px solid rgba(201,168,76,0.3); }
+
+  /* ═══ SCROLLBAR ═══ */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border-gold); border-radius: 3px; }
+
+  .section-divider {
+    text-align: center;
+    color: var(--gold-dim);
+    font-size: 18px;
+    letter-spacing: 12px;
+    margin: 4px 0;
+    opacity: 0.5;
+  }
+
+  /* ═══ MOBILE ═══ */
+  @media (max-width: 600px) {
+    .entry.player-entry { grid-template-columns: 1fr 1fr 36px; }
+    .entry.player-entry .coord-pair { grid-column: 1 / -2; }
+    .entry.artefact-entry { grid-template-columns: 1fr 1fr 36px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>⚔ Artéfacts — Calculateur de Distance ⚔</h1>
+    <div class="subtitle">Travian Legends · Distance Chebyshev · Classement par proximité</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- PARAMÈTRES SERVEUR -->
+  <div style="padding: 20px 0 0;">
+    <div class="settings-bar">
+      <div class="field">
+        <label>Multiplicateur de vitesse</label>
+        <select id="speed">
+          <option value="1">×1 — Standard</option>
+          <option value="2" selected>×2 — Rapide (frx2)</option>
+          <option value="3">×3</option>
+          <option value="5">×5</option>
+          <option value="10">×10</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Niveau Place de Tournoi (défaut)</label>
+        <select id="tournament">
+          <option value="0">Niveau 0 (aucune)</option>
+          <option value="1">Niveau 1 (+20%)</option>
+          <option value="2">Niveau 2 (+40%)</option>
+          <option value="3">Niveau 3 (+60%)</option>
+          <option value="4">Niveau 4 (+80%)</option>
+          <option value="5">Niveau 5 (+100%)</option>
+          <option value="10">Niveau 10 (+200%)</option>
+          <option value="15">Niveau 15 (+300%)</option>
+          <option value="20">Niveau 20 (+400%)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Tribu offensive principale</label>
+        <select id="tribe">
+          <option value="teuton">Teuton (Cavalier TK: 9 c/h)</option>
+          <option value="roman">Romain (EC: 10 c/h)</option>
+          <option value="gaul">Gaulois (Druide: 10 c/h)</option>
+          <option value="hun" selected>Hun (Mardandier: 14 c/h)</option>
+          <option value="egypt">Égyptien (Cavalier Ankh: 9 c/h)</option>
+          <option value="sparta">Spartiate (Corinthien: 12 c/h)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider">· · ·</div>
+
+  <!-- GRILLE PRINCIPALE -->
+  <div class="main-grid">
+
+    <!-- PANEL JOUEURS / VILLAGES -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-icon">🏰</span>
+        <h2>Villages de l'Alliance</h2>
+      </div>
+      <div class="panel-body">
+        <div style="display:grid;grid-template-columns:1fr 70px 70px 70px 36px;gap:8px;margin-bottom:6px;">
+          <div style="font-size:11px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;">Joueur / Village</div>
+          <div style="font-size:11px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;text-align:center;">X</div>
+          <div style="font-size:11px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;text-align:center;">Y</div>
+          <div style="font-size:11px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;text-align:center;">PT Niv.</div>
+          <div></div>
+        </div>
+        <div id="players-list"></div>
+        <button class="btn btn-add" onclick="addPlayer()">+ Ajouter un village</button>
+      </div>
+    </div>
+
+    <!-- PANEL ARTÉFACTS -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-icon">💎</span>
+        <h2>Artéfacts à Conquérir</h2>
+      </div>
+      <div class="panel-body">
+        <div style="display:grid;grid-template-columns:1fr 70px 70px 90px 36px;gap:8px;margin-bottom:6px;">
+          <div style="font-size:11px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;">Nom / Type</div>
+          <div style="font-size:11px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;text-align:center;">X</div>
+          <div style="font-size:11px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;text-align:center;">Y</div>
+          <div style="font-size:11px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;text-align:center;">Taille</div>
+          <div></div>
+        </div>
+        <div id="artefacts-list"></div>
+        <button class="btn btn-add" onclick="addArtefact()">+ Ajouter un artéfact</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOUTON CALCUL -->
+  <button class="btn btn-gold btn-calc" onclick="calculate()">
+    ⚔ &nbsp; CALCULER LES DISTANCES &nbsp; ⚔
+  </button>
+
+  <!-- RÉSULTATS -->
+  <div class="results-section" id="results-section" style="display:none;">
+    <div class="results-panel">
+      <div class="panel-header">
+        <span class="panel-icon">📊</span>
+        <h2>Classement par Artéfact</h2>
+      </div>
+      <div id="results-body"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer style="text-align:center;padding:24px;color:var(--text-dim);font-size:13px;border-top:1px solid var(--border);margin-top:20px;">
+  ✦ &nbsp; Travian Legends — Outil Alliance N-A · frx2 &nbsp; ✦
+</footer>
+
+<script>
+// ═══════════════════════════════════════════
+// DONNÉES VITESSE PAR TRIBU (cases/heure)
+// base (×1 serveur)
+// ═══════════════════════════════════════════
+const TRIBE_SPEEDS = {
+  teuton: { name: 'Cavalier TK', speed: 9 },
+  roman:  { name: 'Équestre en Cuirasse', speed: 10 },
+  gaul:   { name: 'Druide', speed: 10 },
+  hun:    { name: 'Mardandier', speed: 14 },
+  egypt:  { name: 'Cav. Ankh', speed: 9 },
+  sparta: { name: 'Corinthien', speed: 12 },
+};
+
+// Place de Tournoi : bonus = niveau * 20%
+function tournamentBonus(level) {
+  return 1 + (parseInt(level) * 0.2);
+}
+
+// Distance Chebyshev = max(|Δx|, |Δy|)
+function chebyshev(x1, y1, x2, y2) {
+  return Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1));
+}
+
+// Temps de trajet en heures
+function travelTime(dist, tribeKey, serverSpeed, ptLevel) {
+  const baseSpeed = TRIBE_SPEEDS[tribeKey].speed;
+  const effective = baseSpeed * parseInt(serverSpeed) * tournamentBonus(ptLevel);
+  return dist / effective; // heures
+}
+
+function formatTime(hours) {
+  if (hours === 0) return '—';
+  const total = Math.round(hours * 3600);
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  if (h > 0) return `${h}h ${String(m).padStart(2,'0')}min`;
+  return `${m}min ${String(s).padStart(2,'0')}s`;
+}
+
+function timeClass(hours) {
+  if (hours < 1) return 'travel-fast';
+  if (hours < 3) return 'travel-mid';
+  return 'travel-slow';
+}
+
+// ═══════════════════════════════════════════
+// GESTION DES ENTRÉES JOUEURS
+// ═══════════════════════════════════════════
+let playerCount = 0;
+
+function addPlayer(name='', x='', y='', pt='') {
+  playerCount++;
+  const id = playerCount;
+  const div = document.createElement('div');
+  div.className = 'entry player-entry';
+  div.id = `player-${id}`;
+  div.innerHTML = `
+    <div>
+      <label class="coord-label">Joueur / Village</label>
+      <input type="text" placeholder="Ex: NoGodNoMaster – Bh3" value="${name}" id="p-name-${id}">
+    </div>
+    <div>
+      <label class="coord-label">X</label>
+      <input type="number" placeholder="-200" value="${x}" id="p-x-${id}">
+    </div>
+    <div>
+      <label class="coord-label">Y</label>
+      <input type="number" placeholder="75" value="${y}" id="p-y-${id}">
+    </div>
+    <div>
+      <label class="coord-label">PT niv.</label>
+      <input type="number" placeholder="0" min="0" max="20" value="${pt}" id="p-pt-${id}" style="width:100%;">
+    </div>
+    <button class="btn btn-red" onclick="removeEntry('player-${id}')" title="Supprimer">✕</button>
+  `;
+  document.getElementById('players-list').appendChild(div);
+}
+
+// ═══════════════════════════════════════════
+// GESTION DES ENTRÉES ARTÉFACTS
+// ═══════════════════════════════════════════
+let artefactCount = 0;
+
+const ARTEFACT_TYPES = [
+  'Bottes du Messager','Diète','Oeil','Architecte',"Oeil de l'Éclaireur",
+  'Grande Diète','Grandes Bottes','Grand Architecte','Artéfact Unique','Autre'
+];
+
+function addArtefact(name='', x='', y='', size='small') {
+  artefactCount++;
+  const id = artefactCount;
+  const div = document.createElement('div');
+  div.className = 'entry artefact-entry';
+  div.id = `artefact-${id}`;
+
+  const typeOptions = ARTEFACT_TYPES.map(t => `<option value="${t}" ${t===name?'selected':''}>${t}</option>`).join('');
+
+  div.innerHTML = `
+    <div>
+      <label class="coord-label">Nom / Type</label>
+      <input type="text" placeholder="Ex: Bottes du Messager" value="${name}" id="a-name-${id}" list="artefact-types">
+    </div>
+    <div>
+      <label class="coord-label">X</label>
+      <input type="number" placeholder="100" value="${x}" id="a-x-${id}">
+    </div>
+    <div>
+      <label class="coord-label">Y</label>
+      <input type="number" placeholder="-50" value="${y}" id="a-y-${id}">
+    </div>
+    <div>
+      <label class="coord-label">Taille</label>
+      <select id="a-size-${id}">
+        <option value="small" ${size==='small'?'selected':''}>Petit</option>
+        <option value="large" ${size==='large'?'selected':''}>Grand</option>
+        <option value="unique" ${size==='unique'?'selected':''}>Unique</option>
+      </select>
+    </div>
+    <button class="btn btn-red" onclick="removeEntry('artefact-${id}')" title="Supprimer">✕</button>
+  `;
+  document.getElementById('artefacts-list').appendChild(div);
+}
+
+function removeEntry(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+// ═══════════════════════════════════════════
+// COLLECTE DES DONNÉES
+// ═══════════════════════════════════════════
+function getPlayers() {
+  const players = [];
+  document.querySelectorAll('[id^="player-"]').forEach(el => {
+    const id = el.id.split('-')[1];
+    const name = document.getElementById(`p-name-${id}`)?.value.trim();
+    const x = document.getElementById(`p-x-${id}`)?.value;
+    const y = document.getElementById(`p-y-${id}`)?.value;
+    const pt = document.getElementById(`p-pt-${id}`)?.value || '0';
+    if (name && x !== '' && y !== '') {
+      players.push({ name, x: parseInt(x), y: parseInt(y), pt: parseInt(pt) });
+    }
+  });
+  return players;
+}
+
+function getArtefacts() {
+  const arts = [];
+  document.querySelectorAll('[id^="artefact-"]').forEach(el => {
+    const id = el.id.split('-')[1];
+    const name = document.getElementById(`a-name-${id}`)?.value.trim();
+    const x = document.getElementById(`a-x-${id}`)?.value;
+    const y = document.getElementById(`a-y-${id}`)?.value;
+    const size = document.getElementById(`a-size-${id}`)?.value || 'small';
+    if (name && x !== '' && y !== '') {
+      arts.push({ name, x: parseInt(x), y: parseInt(y), size });
+    }
+  });
+  return arts;
+}
+
+// ═══════════════════════════════════════════
+// CALCUL PRINCIPAL
+// ═══════════════════════════════════════════
+function calculate() {
+  const players = getPlayers();
+  const artefacts = getArtefacts();
+  const speed = document.getElementById('speed').value;
+  const defaultPT = document.getElementById('tournament').value;
+  const tribe = document.getElementById('tribe').value;
+
+  if (players.length === 0) {
+    alert('Ajoute au moins un village !');
+    return;
+  }
+  if (artefacts.length === 0) {
+    alert('Ajoute au moins un artéfact !');
+    return;
+  }
+
+  const sizeLabel = { small: 'Petit', large: 'Grand', unique: 'Unique' };
+  const sizeClass = { small: 'badge-small', large: 'badge-large', unique: 'badge-unique' };
+
+  let html = '';
+
+  artefacts.forEach(art => {
+    // Calcul distances pour chaque joueur
+    const rows = players.map(p => {
+      const ptLevel = p.pt > 0 ? p.pt : defaultPT;
+      const dist = chebyshev(p.x, p.y, art.x, art.y);
+      const hours = travelTime(dist, tribe, speed, ptLevel);
+      return { ...p, dist, hours, ptLevel };
+    }).sort((a, b) => a.dist - b.dist);
+
+    const maxDist = rows[rows.length - 1]?.dist || 1;
+
+    const rowsHTML = rows.map((r, i) => {
+      const rankNum = i + 1;
+      const badgeClass = rankNum === 1 ? 'rank-1' : rankNum === 2 ? 'rank-2' : rankNum === 3 ? 'rank-3' : 'rank-other';
+      const pct = Math.round((r.dist / maxDist) * 100);
+      const tc = timeClass(r.hours);
+      const ptInfo = r.ptLevel > 0 ? `<span style="color:var(--gold-dim);font-size:12px;"> (PT niv.${r.ptLevel})</span>` : '';
+
+      return `
+        <tr>
+          <td><span class="rank-badge ${badgeClass}">${rankNum}</span></td>
+          <td>
+            <div style="font-weight:600;color:var(--text);">${r.name}</div>
+            <div style="font-size:12px;color:var(--text-dim);">(${r.x} | ${r.y})</div>
+          </td>
+          <td>
+            <div class="dist-value">${r.dist} cases</div>
+            <div class="dist-bar"><div class="dist-fill" style="width:${pct}%"></div></div>
+          </td>
+          <td>
+            <div class="travel-time ${tc}">${formatTime(r.hours)}</div>
+            ${ptInfo}
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    html += `
+      <div class="artefact-block">
+        <div class="artefact-title">
+          💎 ${art.name}
+          <span class="badge-size ${sizeClass[art.size]}">${sizeLabel[art.size]}</span>
+        </div>
+        <div class="artefact-coords">Coordonnées : (${art.x} | ${art.y})</div>
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Village</th>
+              <th>Distance</th>
+              <th>Temps de trajet</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHTML}</tbody>
+        </table>
+      </div>
+    `;
+  });
+
+  document.getElementById('results-body').innerHTML = html;
+  document.getElementById('results-section').style.display = 'block';
+  document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ═══════════════════════════════════════════
+// DATALIST TYPES ARTÉFACTS
+// ═══════════════════════════════════════════
+const dl = document.createElement('datalist');
+dl.id = 'artefact-types';
+ARTEFACT_TYPES.forEach(t => {
+  const opt = document.createElement('option');
+  opt.value = t;
+  dl.appendChild(opt);
+});
+document.body.appendChild(dl);
+
+// ═══════════════════════════════════════════
+// INITIALISATION AVEC EXEMPLES
+// ═══════════════════════════════════════════
+addPlayer('NoGodNoMaster – Bh3', -12, 45, 5);
+addPlayer('Allié1 – Capital', 30, -20, 0);
+addPlayer('Allié2 – Village Off', -80, 10, 3);
+
+addArtefact('Bottes du Messager', 50, 80, 'small');
+addArtefact('Grande Diète', -100, -60, 'large');
+</script>
+</body>
+</html>
