@@ -25,7 +25,7 @@ h1{font-family:'Cinzel',serif;font-size:clamp(17px,3.5vw,30px);font-weight:900;c
 .subtitle{font-size:12px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
 
 /* CAT MASCOT */
-.cat-mascot{position:absolute;bottom:100%;right:-10px;width:90px;height:100px;pointer-events:none;animation:catFloat 3.5s ease-in-out infinite;}
+.cat-mascot{position:absolute;top:0;right:-100px;width:90px;height:100px;pointer-events:none;animation:catFloat 3.5s ease-in-out infinite;}
 @keyframes catFloat{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-6px) rotate(1deg);}}
 .cat-mascot:hover{animation:catWiggle .4s ease-in-out;}
 @keyframes catWiggle{0%{transform:rotate(-5deg);}25%{transform:rotate(5deg);}50%{transform:rotate(-4deg);}75%{transform:rotate(3deg);}100%{transform:rotate(0deg);}}
@@ -173,134 +173,110 @@ input[type="datetime-local"]{color-scheme:dark;}
     <div class="header-title-wrap">
       <h1>⚔ Artéfacts — Calculateur de Distance ⚔</h1>
 
-      <!-- MANGA CAT MASCOT — SVG inline -->
+      <!-- MANGA CAT MASCOT — gris rayé blanc -->
       <svg class="cat-mascot" viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;">
-
+        <defs>
+          <radialGradient id="bodyGrad" cx="40%" cy="30%"><stop offset="0%" stop-color="#ddd" stop-opacity="0.5"/><stop offset="100%" stop-color="#666" stop-opacity="0.2"/></radialGradient>
+          <radialGradient id="headGrad" cx="35%" cy="25%"><stop offset="0%" stop-color="#ddd" stop-opacity="0.5"/><stop offset="100%" stop-color="#666" stop-opacity="0.2"/></radialGradient>
+          <linearGradient id="helmetGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#e8c96a" stop-opacity="0.6"/><stop offset="100%" stop-color="#5a3e10" stop-opacity="0.3"/></linearGradient>
+          <linearGradient id="wingGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c9a84c" stop-opacity="0.7"/><stop offset="100%" stop-color="#5a3e10" stop-opacity="0.2"/></linearGradient>
+        </defs>
         <!-- SHADOW -->
         <ellipse cx="45" cy="108" rx="18" ry="4" fill="rgba(0,0,0,0.3)"/>
-
-        <!-- TAIL — behind body -->
-        <path d="M58 85 Q82 90 80 70 Q78 55 68 60" stroke="#d4a96a" stroke-width="7" stroke-linecap="round" fill="none"/>
-        <path d="M58 85 Q82 90 80 70 Q78 55 68 60" stroke="#f5d49a" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.5"/>
-
+        <!-- TAIL -->
+        <path d="M58 85 Q82 90 80 70 Q78 55 68 60" stroke="#888" stroke-width="7" stroke-linecap="round" fill="none"/>
+        <path d="M58 85 Q82 90 80 70 Q78 55 68 60" stroke="#ccc" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+        <path d="M70 62 Q74 65 73 70" stroke="#555" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.45"/>
+        <path d="M73 74 Q76 77 74 81" stroke="#555" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.35"/>
         <!-- BODY -->
-        <ellipse cx="45" cy="82" rx="24" ry="22" fill="#d4a96a"/>
+        <ellipse cx="45" cy="82" rx="24" ry="22" fill="#9a9a9a"/>
         <ellipse cx="45" cy="82" rx="24" ry="22" fill="url(#bodyGrad)"/>
-        <!-- belly patch -->
-        <ellipse cx="45" cy="86" rx="14" ry="14" fill="#f5d49a" opacity="0.7"/>
-
-        <!-- PAWS sitting -->
-        <ellipse cx="32" cy="101" rx="9" ry="5" fill="#c49060"/>
-        <ellipse cx="58" cy="101" rx="9" ry="5" fill="#c49060"/>
-        <!-- paw toes -->
-        <path d="M27 100 Q29 97 31 100" stroke="#a07040" stroke-width="1.2" fill="none"/>
-        <path d="M31 99 Q33 96 35 99" stroke="#a07040" stroke-width="1.2" fill="none"/>
-        <path d="M35 100 Q37 97 39 100" stroke="#a07040" stroke-width="1.2" fill="none"/>
-        <path d="M53 99 Q55 96 57 99" stroke="#a07040" stroke-width="1.2" fill="none"/>
-        <path d="M57 100 Q59 97 61 100" stroke="#a07040" stroke-width="1.2" fill="none"/>
-        <path d="M61 99 Q63 96 65 99" stroke="#a07040" stroke-width="1.2" fill="none"/>
-
+        <!-- body stripes -->
+        <path d="M28 70 Q33 67 37 70" stroke="#555" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+        <path d="M26 77 Q31 74 36 77" stroke="#555" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.4"/>
+        <path d="M53 70 Q57 67 62 70" stroke="#555" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+        <path d="M54 77 Q59 74 63 77" stroke="#555" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.4"/>
+        <!-- white belly -->
+        <ellipse cx="45" cy="87" rx="13" ry="13" fill="#e8e8e8" opacity="0.75"/>
+        <!-- PAWS -->
+        <ellipse cx="32" cy="101" rx="9" ry="5" fill="#888"/>
+        <ellipse cx="58" cy="101" rx="9" ry="5" fill="#888"/>
+        <path d="M27 100 Q29 97 31 100" stroke="#444" stroke-width="1.2" fill="none"/>
+        <path d="M31 99 Q33 96 35 99" stroke="#444" stroke-width="1.2" fill="none"/>
+        <path d="M35 100 Q37 97 39 100" stroke="#444" stroke-width="1.2" fill="none"/>
+        <path d="M53 99 Q55 96 57 99" stroke="#444" stroke-width="1.2" fill="none"/>
+        <path d="M57 100 Q59 97 61 100" stroke="#444" stroke-width="1.2" fill="none"/>
+        <path d="M61 99 Q63 96 65 99" stroke="#444" stroke-width="1.2" fill="none"/>
         <!-- HEAD -->
-        <ellipse cx="45" cy="52" rx="22" ry="20" fill="#d4a96a"/>
+        <ellipse cx="45" cy="52" rx="22" ry="20" fill="#9a9a9a"/>
         <ellipse cx="45" cy="52" rx="22" ry="20" fill="url(#headGrad)"/>
-
-        <!-- EARS (cat, pointy) -->
-        <polygon points="26,42 20,18 36,36" fill="#d4a96a"/>
-        <polygon points="26,42 20,18 36,36" fill="url(#headGrad)" opacity="0.6"/>
-        <polygon points="27,40 22,22 34,36" fill="#e8b0a0" opacity="0.7"/>
-        <polygon points="64,42 70,18 54,36" fill="#d4a96a"/>
-        <polygon points="64,42 70,18 54,36" fill="url(#headGrad)" opacity="0.6"/>
-        <polygon points="63,40 68,22 56,36" fill="#e8b0a0" opacity="0.7"/>
-
-        <!-- FACE STRIPES (manga markings) -->
-        <path d="M33 48 Q30 50 28 54" stroke="#b88050" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
-        <path d="M35 50 Q32 53 31 57" stroke="#b88050" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.5"/>
-        <path d="M57 48 Q60 50 62 54" stroke="#b88050" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
-        <path d="M55 50 Q58 53 59 57" stroke="#b88050" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.5"/>
-
-        <!-- MANGA EYES — big expressive -->
-        <!-- left eye -->
-        <ellipse cx="37" cy="52" rx="7.5" ry="8.5" fill="white"/>
-        <ellipse cx="37" cy="53" rx="6" ry="7" fill="#1a8a5c"/>
-        <ellipse cx="37" cy="53" rx="4" ry="5.5" fill="#0d1a10"/>
-        <ellipse cx="35" cy="50" rx="2" ry="2.5" fill="white" opacity="0.9"/>
-        <ellipse cx="40" cy="55" rx="1" ry="1.5" fill="white" opacity="0.5"/>
-        <!-- left eye shine lines (manga style) -->
-        <line x1="31" y1="47" x2="37" y2="47" stroke="white" stroke-width="1.2" opacity="0.3"/>
-
-        <!-- right eye -->
-        <ellipse cx="53" cy="52" rx="7.5" ry="8.5" fill="white"/>
-        <ellipse cx="53" cy="53" rx="6" ry="7" fill="#1a8a5c"/>
-        <ellipse cx="53" cy="53" rx="4" ry="5.5" fill="#0d1a10"/>
-        <ellipse cx="51" cy="50" rx="2" ry="2.5" fill="white" opacity="0.9"/>
-        <ellipse cx="56" cy="55" rx="1" ry="1.5" fill="white" opacity="0.5"/>
-        <line x1="47" y1="47" x2="53" y2="47" stroke="white" stroke-width="1.2" opacity="0.3"/>
-
+        <!-- EARS -->
+        <polygon points="26,42 20,18 36,36" fill="#888"/>
+        <polygon points="27,40 22,22 34,36" fill="#d0a0a8" opacity="0.85"/>
+        <polygon points="64,42 70,18 54,36" fill="#888"/>
+        <polygon points="63,40 68,22 56,36" fill="#d0a0a8" opacity="0.85"/>
+        <!-- head tabby stripes -->
+        <path d="M38 34 Q40 30 42 34" stroke="#555" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+        <path d="M44 32 Q45 28 46 32" stroke="#555" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+        <path d="M48 34 Q50 30 52 34" stroke="#555" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+        <!-- cheek stripes -->
+        <path d="M33 48 Q30 51 28 55" stroke="#555" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.45"/>
+        <path d="M35 51 Q32 54 31 58" stroke="#555" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.35"/>
+        <path d="M57 48 Q60 51 62 55" stroke="#555" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.45"/>
+        <path d="M55 51 Q58 54 59 58" stroke="#555" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.35"/>
+        <!-- white muzzle -->
+        <ellipse cx="45" cy="61" rx="9" ry="7" fill="#e0e0e0" opacity="0.65"/>
+        <!-- MANGA EYES -->
+        <ellipse cx="37" cy="51" rx="7.5" ry="8.5" fill="white"/>
+        <ellipse cx="37" cy="52" rx="6" ry="7" fill="#3a7a30"/>
+        <ellipse cx="37" cy="52" rx="4" ry="5.5" fill="#101810"/>
+        <ellipse cx="35" cy="49" rx="2" ry="2.5" fill="white" opacity="0.9"/>
+        <ellipse cx="40" cy="54" rx="1" ry="1.5" fill="white" opacity="0.5"/>
+        <line x1="31" y1="46" x2="37" y2="46" stroke="white" stroke-width="1.2" opacity="0.3"/>
+        <ellipse cx="53" cy="51" rx="7.5" ry="8.5" fill="white"/>
+        <ellipse cx="53" cy="52" rx="6" ry="7" fill="#3a7a30"/>
+        <ellipse cx="53" cy="52" rx="4" ry="5.5" fill="#101810"/>
+        <ellipse cx="51" cy="49" rx="2" ry="2.5" fill="white" opacity="0.9"/>
+        <ellipse cx="56" cy="54" rx="1" ry="1.5" fill="white" opacity="0.5"/>
+        <line x1="47" y1="46" x2="53" y2="46" stroke="white" stroke-width="1.2" opacity="0.3"/>
         <!-- NOSE -->
         <path d="M42 60 L45 63 L48 60 Q45 58 42 60Z" fill="#e07080"/>
         <!-- MOUTH -->
-        <path d="M45 63 Q41 67 38 65" stroke="#c05060" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M45 63 Q49 67 52 65" stroke="#c05060" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-
+        <path d="M45 63 Q41 67 38 65" stroke="#b04050" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M45 63 Q49 67 52 65" stroke="#b04050" stroke-width="1.5" fill="none" stroke-linecap="round"/>
         <!-- WHISKERS -->
-        <line x1="24" y1="60" x2="41" y2="62" stroke="#f0e0c0" stroke-width="1" opacity="0.8"/>
-        <line x1="22" y1="63" x2="40" y2="63" stroke="#f0e0c0" stroke-width="1" opacity="0.7"/>
-        <line x1="24" y1="66" x2="41" y2="64" stroke="#f0e0c0" stroke-width="1" opacity="0.6"/>
-        <line x1="66" y1="60" x2="49" y2="62" stroke="#f0e0c0" stroke-width="1" opacity="0.8"/>
-        <line x1="68" y1="63" x2="50" y2="63" stroke="#f0e0c0" stroke-width="1" opacity="0.7"/>
-        <line x1="66" y1="66" x2="49" y2="64" stroke="#f0e0c0" stroke-width="1" opacity="0.6"/>
-
+        <line x1="23" y1="60" x2="40" y2="62" stroke="white" stroke-width="1" opacity="0.85"/>
+        <line x1="21" y1="63" x2="39" y2="63" stroke="white" stroke-width="1" opacity="0.75"/>
+        <line x1="23" y1="66" x2="40" y2="64" stroke="white" stroke-width="1" opacity="0.65"/>
+        <line x1="67" y1="60" x2="50" y2="62" stroke="white" stroke-width="1" opacity="0.85"/>
+        <line x1="69" y1="63" x2="51" y2="63" stroke="white" stroke-width="1" opacity="0.75"/>
+        <line x1="67" y1="66" x2="50" y2="64" stroke="white" stroke-width="1" opacity="0.65"/>
+        <!-- outlines -->
+        <ellipse cx="45" cy="82" rx="24" ry="22" fill="none" stroke="#666" stroke-width="1" opacity="0.4"/>
+        <ellipse cx="45" cy="52" rx="22" ry="20" fill="none" stroke="#666" stroke-width="1" opacity="0.4"/>
         <!-- ═══ CASQUE GAULOIS ═══ -->
-        <!-- base du casque -->
         <path d="M24 42 Q24 28 45 26 Q66 28 66 42 L63 44 Q45 30 27 44Z" fill="#8b7340"/>
         <path d="M24 42 Q24 28 45 26 Q66 28 66 42 L63 44 Q45 30 27 44Z" fill="url(#helmetGrad)"/>
-        <!-- rebord bas du casque -->
         <path d="M22 43 Q45 33 68 43 L66 47 Q45 36 24 47Z" fill="#6b5520"/>
-        <path d="M22 43 Q45 33 68 43 L66 47 Q45 36 24 47Z" fill="#c9a84c" opacity="0.3"/>
-        <!-- reflet doré sur le casque -->
+        <path d="M22 43 Q45 33 68 43 L66 47 Q45 36 24 47Z" fill="#c9a84c" opacity="0.25"/>
         <path d="M30 35 Q45 29 60 35" stroke="#e8c96a" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/>
-        <!-- rivets dorés -->
         <circle cx="28" cy="42" r="2" fill="#c9a84c"/>
         <circle cx="62" cy="42" r="2" fill="#c9a84c"/>
         <circle cx="45" cy="28" r="2" fill="#c9a84c"/>
-        <!-- AILES du casque gaulois — gauche -->
+        <!-- AILE gauche -->
         <path d="M22 38 Q8 30 6 20 Q12 24 18 28 Q14 18 16 10 Q22 18 22 28 Q28 22 32 18 Q28 28 24 35Z" fill="#8b7340"/>
         <path d="M22 38 Q8 30 6 20 Q12 24 18 28 Q14 18 16 10 Q22 18 22 28 Q28 22 32 18 Q28 28 24 35Z" fill="url(#wingGrad)"/>
-        <path d="M18 28 Q14 20 16 12" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.6"/>
-        <path d="M22 30 Q20 22 22 15" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.5"/>
-        <!-- AILES — droite -->
+        <path d="M18 28 Q14 20 16 12" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.55"/>
+        <path d="M22 30 Q20 22 22 15" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.45"/>
+        <!-- AILE droite -->
         <path d="M68 38 Q82 30 84 20 Q78 24 72 28 Q76 18 74 10 Q68 18 68 28 Q62 22 58 18 Q62 28 66 35Z" fill="#8b7340"/>
         <path d="M68 38 Q82 30 84 20 Q78 24 72 28 Q76 18 74 10 Q68 18 68 28 Q62 22 58 18 Q62 28 66 35Z" fill="url(#wingGrad)"/>
-        <path d="M72 28 Q76 20 74 12" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.6"/>
-        <path d="M68 30 Q70 22 68 15" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.5"/>
-        <!-- Cimier sur le dessus (plume/crin) -->
+        <path d="M72 28 Q76 20 74 12" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.55"/>
+        <path d="M68 30 Q70 22 68 15" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.45"/>
+        <!-- CIMIER rouge -->
         <path d="M40 26 Q38 16 40 8 Q43 4 45 2 Q47 4 50 8 Q52 16 50 26" fill="#c0392b" opacity="0.9"/>
         <path d="M42 24 Q40 14 42 7 Q44 4 45 3 Q46 4 48 7 Q50 14 48 24" fill="#e74c3c" opacity="0.7"/>
-        <path d="M44 22 Q43 12 44 6 Q45 4 46 6 Q47 12 46 22" fill="#ff8080" opacity="0.5"/>
-
-        <!-- outline léger du corps -->
-        <ellipse cx="45" cy="82" rx="24" ry="22" fill="none" stroke="#a07840" stroke-width="1.2" opacity="0.4"/>
-        <ellipse cx="45" cy="52" rx="22" ry="20" fill="none" stroke="#a07840" stroke-width="1.2" opacity="0.4"/>
-
-        <!-- DÉGRADÉS -->
-        <defs>
-          <radialGradient id="bodyGrad" cx="40%" cy="30%">
-            <stop offset="0%" stop-color="#f0c080" stop-opacity="0.4"/>
-            <stop offset="100%" stop-color="#a07030" stop-opacity="0.2"/>
-          </radialGradient>
-          <radialGradient id="headGrad" cx="35%" cy="25%">
-            <stop offset="0%" stop-color="#f0c080" stop-opacity="0.4"/>
-            <stop offset="100%" stop-color="#9a6828" stop-opacity="0.2"/>
-          </radialGradient>
-          <linearGradient id="helmetGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#e8c96a" stop-opacity="0.5"/>
-            <stop offset="100%" stop-color="#5a3e10" stop-opacity="0.3"/>
-          </linearGradient>
-          <linearGradient id="wingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.6"/>
-            <stop offset="100%" stop-color="#5a3e10" stop-opacity="0.2"/>
-          </linearGradient>
-        </defs>
+        <path d="M44 22 Q43 12 44 6 Q45 4 46 6 Q47 12 46 22" fill="#ff9090" opacity="0.5"/>
       </svg>
       <!-- end cat -->
 
