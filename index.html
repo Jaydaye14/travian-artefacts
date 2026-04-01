@@ -3,143 +3,309 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Travian — Calculateur d'Artéfacts</title>
+<title>Travian — Calculateur d'Artéfacts v3</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#0a0704;--bg2:#110e09;--bg3:#1a1510;
-    --gold:#c9a84c;--gold2:#e8c96a;--gold-dim:#7a6030;
-    --red:#8b2020;--text:#d4c4a0;--text-dim:#8a7a60;
-    --border:#3a2e1e;--border-gold:#5a4520;--green2:#3daf65;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:17px;min-height:100vh;
-    background-image:radial-gradient(ellipse 80% 40% at 50% 0%,#1a1005 0%,transparent 70%),
-    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
-  header{text-align:center;padding:34px 20px 22px;border-bottom:1px solid var(--border-gold);position:relative;background:linear-gradient(180deg,#1a1005 0%,transparent 100%);}
-  header::before,header::after{content:'✦';position:absolute;top:50%;transform:translateY(-50%);color:var(--gold-dim);font-size:20px;}
-  header::before{left:28px;}header::after{right:28px;}
-  h1{font-family:'Cinzel',serif;font-size:clamp(19px,4vw,33px);font-weight:900;color:var(--gold2);letter-spacing:3px;text-shadow:0 0 30px rgba(201,168,76,.4);}
-  .subtitle{font-size:13px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:5px;}
-  .container{max-width:1200px;margin:0 auto;padding:0 14px;}
+:root{
+  --bg:#0a0704;--bg2:#110e09;--bg3:#1a1510;--bg4:#0e0b07;
+  --gold:#c9a84c;--gold2:#e8c96a;--gold-dim:#7a6030;
+  --red:#8b2020;--text:#d4c4a0;--text-dim:#8a7a60;
+  --border:#3a2e1e;--border-gold:#5a4520;--green2:#3daf65;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:16px;min-height:100vh;
+  background-image:radial-gradient(ellipse 80% 40% at 50% 0%,#1a1005 0%,transparent 70%),
+  url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.012'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
 
-  /* TABS */
-  .tabs{display:flex;border-bottom:1px solid var(--border-gold);margin:18px 0 0;}
-  .tab-btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:10px 20px;background:transparent;border:none;color:var(--text-dim);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;}
-  .tab-btn.active{color:var(--gold2);border-bottom-color:var(--gold2);}
-  .tab-btn:hover{color:var(--gold);}
-  .tab-content{display:none;padding:18px 0;}
-  .tab-content.active{display:block;}
+header{text-align:center;padding:30px 20px 28px;border-bottom:1px solid var(--border-gold);position:relative;background:linear-gradient(180deg,#1a1005 0%,transparent 100%);overflow:visible;}
+header::before,header::after{content:'✦';position:absolute;top:50%;transform:translateY(-50%);color:var(--gold-dim);font-size:18px;}
+header::before{left:24px;}header::after{right:24px;}
+.header-title-wrap{position:relative;display:inline-block;}
+h1{font-family:'Cinzel',serif;font-size:clamp(17px,3.5vw,30px);font-weight:900;color:var(--gold2);letter-spacing:3px;text-shadow:0 0 30px rgba(201,168,76,.4);}
+.subtitle{font-size:12px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
 
-  .main-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
-  @media(max-width:720px){.main-grid{grid-template-columns:1fr;}}
+/* CAT MASCOT */
+.cat-mascot{position:absolute;bottom:100%;right:-10px;width:90px;height:100px;pointer-events:none;animation:catFloat 3.5s ease-in-out infinite;}
+@keyframes catFloat{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-6px) rotate(1deg);}}
+.cat-mascot:hover{animation:catWiggle .4s ease-in-out;}
+@keyframes catWiggle{0%{transform:rotate(-5deg);}25%{transform:rotate(5deg);}50%{transform:rotate(-4deg);}75%{transform:rotate(3deg);}100%{transform:rotate(0deg);}}
+.container{max-width:1300px;margin:0 auto;padding:0 12px;}
 
-  .panel{background:var(--bg2);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
-  .panel-header{background:linear-gradient(90deg,var(--bg3),#1e1810);border-bottom:1px solid var(--border-gold);padding:11px 15px;display:flex;align-items:center;gap:9px;}
-  .panel-header h2{font-family:'Cinzel',serif;font-size:12px;font-weight:600;color:var(--gold);letter-spacing:2px;text-transform:uppercase;}
-  .panel-icon{font-size:15px;}
-  .panel-body{padding:14px;}
+/* TABS */
+.tabs{display:flex;flex-wrap:wrap;border-bottom:1px solid var(--border-gold);margin:16px 0 0;}
+.tab-btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:9px 16px;background:transparent;border:none;color:var(--text-dim);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;}
+.tab-btn.active{color:var(--gold2);border-bottom-color:var(--gold2);}
+.tab-btn:hover{color:var(--gold);}
+.tab-content{display:none;padding:16px 0;}
+.tab-content.active{display:block;}
 
-  label{font-size:11px;color:var(--text-dim);letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:3px;}
-  input[type="text"],input[type="number"],select{
-    background:var(--bg3);border:1px solid var(--border);color:var(--text);
-    padding:6px 8px;font-family:'Crimson Text',serif;font-size:15px;
-    border-radius:3px;width:100%;transition:border-color .2s;outline:none;
-    -webkit-appearance:none;appearance:none;}
-  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a6030'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;padding-right:22px;}
-  input:focus,select:focus{border-color:var(--gold-dim);box-shadow:0 0 0 2px rgba(201,168,76,.1);}
+.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:800px){.main-grid{grid-template-columns:1fr;}}
 
-  /* ROLE BADGES */
-  .role-badge{display:inline-block;font-size:10px;padding:2px 6px;border-radius:10px;font-family:'Cinzel',serif;font-weight:600;letter-spacing:.5px;white-space:nowrap;}
-  .role-off    {background:rgba(192,57,43,.2);color:#e74c3c;border:1px solid rgba(192,57,43,.4);}
-  .role-offcata{background:rgba(230,126,34,.2);color:#e67e22;border:1px solid rgba(230,126,34,.4);}
-  .role-cdt20  {background:rgba(52,152,219,.2);color:#5dade2;border:1px solid rgba(52,152,219,.4);}
-  .role-cata   {background:rgba(155,89,182,.2);color:#af7ac5;border:1px solid rgba(155,89,182,.4);}
-  .role-other  {background:rgba(136,136,136,.15);color:#aaa;border:1px solid rgba(136,136,136,.3);}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.panel-header{background:linear-gradient(90deg,var(--bg3),#1e1810);border-bottom:1px solid var(--border-gold);padding:10px 14px;display:flex;align-items:center;gap:8px;}
+.panel-header h2{font-family:'Cinzel',serif;font-size:11px;font-weight:600;color:var(--gold);letter-spacing:2px;text-transform:uppercase;}
+.panel-icon{font-size:14px;}
+.panel-body{padding:12px;}
 
-  /* ENTRIES */
-  .entry{animation:fadeIn .2s ease;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);}
-  .entry:last-child{border-bottom:none;margin-bottom:0;}
-  .entry-grid{display:grid;gap:6px;align-items:end;}
-  .pg{grid-template-columns:2fr 1fr 55px 55px 70px 32px;}
-  .ag{grid-template-columns:2fr 55px 55px 85px 32px;}
-  @media(max-width:640px){.pg{grid-template-columns:1fr 1fr 32px;}.pg .x-col,.pg .y-col,.pg .pt-col{grid-column:auto;}.ag{grid-template-columns:1fr 1fr 32px;}}
+label{font-size:10px;color:var(--text-dim);letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:2px;}
+input,select{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:5px 7px;font-family:'Crimson Text',serif;font-size:14px;border-radius:3px;width:100%;transition:border-color .2s;outline:none;-webkit-appearance:none;appearance:none;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a6030'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;padding-right:20px;}
+input:focus,select:focus{border-color:var(--gold-dim);box-shadow:0 0 0 2px rgba(201,168,76,.1);}
+input[type="datetime-local"]{color-scheme:dark;}
 
-  @keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+/* ROLE BADGES */
+.rb{display:inline-block;font-size:9px;padding:2px 5px;border-radius:9px;font-family:'Cinzel',serif;font-weight:600;letter-spacing:.5px;white-space:nowrap;}
+.role-off    {background:rgba(192,57,43,.2);color:#e74c3c;border:1px solid rgba(192,57,43,.4);}
+.role-offcata{background:rgba(230,126,34,.2);color:#e67e22;border:1px solid rgba(230,126,34,.4);}
+.role-cdt20  {background:rgba(52,152,219,.2);color:#5dade2;border:1px solid rgba(52,152,219,.4);}
+.role-cdt10  {background:rgba(26,188,156,.2);color:#1abc9c;border:1px solid rgba(26,188,156,.4);}
+.role-cata   {background:rgba(155,89,182,.2);color:#af7ac5;border:1px solid rgba(155,89,182,.4);}
+.role-other  {background:rgba(136,136,136,.15);color:#aaa;border:1px solid rgba(136,136,136,.3);}
 
-  .btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;padding:6px 13px;border:none;border-radius:3px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
-  .btn-gold{background:linear-gradient(135deg,#8b6914,var(--gold));color:#1a1005;font-weight:700;}
-  .btn-gold:hover{background:linear-gradient(135deg,var(--gold),var(--gold2));transform:translateY(-1px);box-shadow:0 4px 12px rgba(201,168,76,.3);}
-  .btn-red{background:transparent;border:1px solid var(--red);color:#c0392b;padding:4px 8px;font-size:12px;}
-  .btn-red:hover{background:var(--red);color:#fff;}
-  .btn-add{background:transparent;border:1px dashed var(--border-gold);color:var(--gold-dim);width:100%;padding:7px;margin-top:8px;}
-  .btn-add:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05);}
-  .btn-calc{display:block;width:100%;padding:12px;font-size:14px;letter-spacing:3px;margin:14px 0;}
+/* ENTRIES */
+.entry{animation:fadeIn .2s ease;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.entry:last-child{border-bottom:none;margin-bottom:0;}
+.eg{display:grid;gap:5px;align-items:end;}
 
-  .settings-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:12px 14px;margin-bottom:14px;}
-  .settings-bar .field{flex:1;min-width:120px;}
+/* Player entry: 2 rows */
+.pr1{grid-template-columns:2fr 1fr 45px 45px 32px;}
+.pr2{grid-template-columns:1fr 1fr 1fr 1fr;margin-top:5px;}
+.ar{grid-template-columns:2fr 45px 45px 80px 32px;}
 
-  /* RESULTS */
-  .results-panel{background:var(--bg2);border:1px solid var(--border-gold);border-radius:4px;overflow:hidden;margin-bottom:18px;}
-  .artefact-block{border-bottom:1px solid var(--border);padding:14px;}
-  .artefact-block:last-child{border-bottom:none;}
-  .artefact-title{font-family:'Cinzel',serif;font-size:14px;color:var(--gold2);margin-bottom:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
 
-  .closest-banner{background:linear-gradient(90deg,rgba(201,168,76,.1),rgba(201,168,76,.03));border:1px solid var(--border-gold);border-radius:4px;padding:8px 13px;margin-bottom:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-  .closest-banner .crown{font-size:17px;}
-  .closest-banner .cn{font-family:'Cinzel',serif;font-size:13px;color:var(--gold2);font-weight:600;}
-  .closest-banner .cd{font-size:12px;color:var(--text-dim);}
+.btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;padding:6px 12px;border:none;border-radius:3px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn-gold{background:linear-gradient(135deg,#8b6914,var(--gold));color:#1a1005;font-weight:700;}
+.btn-gold:hover{background:linear-gradient(135deg,var(--gold),var(--gold2));transform:translateY(-1px);box-shadow:0 3px 10px rgba(201,168,76,.3);}
+.btn-red{background:transparent;border:1px solid var(--red);color:#c0392b;padding:3px 7px;font-size:11px;}
+.btn-red:hover{background:var(--red);color:#fff;}
+.btn-add{background:transparent;border:1px dashed var(--border-gold);color:var(--gold-dim);width:100%;padding:6px;margin-top:7px;}
+.btn-add:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05);}
+.btn-calc{display:block;width:100%;padding:11px;font-size:13px;letter-spacing:3px;margin:12px 0;}
+.btn-blue{background:linear-gradient(135deg,#1a4a6e,#2980b9);color:#d4e8f5;font-weight:700;}
+.btn-blue:hover{background:linear-gradient(135deg,#2980b9,#5dade2);transform:translateY(-1px);}
 
-  .ranking-table{width:100%;border-collapse:collapse;font-size:14px;}
-  .ranking-table th{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1.5px;color:var(--text-dim);text-align:left;padding:5px 8px;border-bottom:1px solid var(--border);text-transform:uppercase;}
-  .ranking-table td{padding:6px 8px;border-bottom:1px solid rgba(58,46,30,.4);vertical-align:middle;}
-  .ranking-table tr:last-child td{border-bottom:none;}
-  .ranking-table tr:hover td{background:rgba(201,168,76,.04);}
-  .ranking-table tr.rf td{background:rgba(201,168,76,.07);}
+/* RESULTS */
+.artefact-block{border-bottom:1px solid var(--border);padding:13px;}
+.artefact-block:last-child{border-bottom:none;}
+.artefact-title{font-family:'Cinzel',serif;font-size:13px;color:var(--gold2);margin-bottom:3px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.closest-banner{background:linear-gradient(90deg,rgba(201,168,76,.1),rgba(201,168,76,.02));border:1px solid var(--border-gold);border-radius:4px;padding:7px 12px;margin-bottom:9px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.cn{font-family:'Cinzel',serif;font-size:12px;color:var(--gold2);font-weight:600;}
+.cd{font-size:11px;color:var(--text-dim);}
 
-  .rank-badge{display:inline-flex;align-items:center;justify-content:center;width:21px;height:21px;border-radius:50%;font-family:'Cinzel',serif;font-size:10px;font-weight:700;}
-  .rk1{background:linear-gradient(135deg,#8b6914,var(--gold2));color:#1a1005;}
-  .rk2{background:#555;color:#ddd;}
-  .rk3{background:#6e3a1a;color:#e09060;}
-  .rko{background:var(--bg3);color:var(--text-dim);border:1px solid var(--border);}
+.ranking-table{width:100%;border-collapse:collapse;font-size:13px;}
+.ranking-table th{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;color:var(--text-dim);text-align:left;padding:4px 7px;border-bottom:1px solid var(--border);text-transform:uppercase;}
+.ranking-table td{padding:5px 7px;border-bottom:1px solid rgba(58,46,30,.4);vertical-align:middle;}
+.ranking-table tr:last-child td{border-bottom:none;}
+.ranking-table tr:hover td{background:rgba(201,168,76,.04);}
+.ranking-table tr.rf td{background:rgba(201,168,76,.07);}
 
-  .dist-value{font-family:'Cinzel',serif;font-size:14px;color:var(--gold);}
-  .dist-bar{height:3px;background:var(--border);border-radius:2px;margin-top:3px;overflow:hidden;}
-  .dist-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;}
-  .tf{color:#3daf65;}.tm{color:var(--gold);}.ts{color:#c0392b;}
+.rkb{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border-radius:50%;font-family:'Cinzel',serif;font-size:9px;font-weight:700;}
+.rk1{background:linear-gradient(135deg,#8b6914,var(--gold2));color:#1a1005;}
+.rk2{background:#555;color:#ddd;}
+.rk3{background:#6e3a1a;color:#e09060;}
+.rko{background:var(--bg3);color:var(--text-dim);border:1px solid var(--border);}
 
-  .badge-size{font-size:10px;padding:1px 6px;border-radius:10px;font-family:'Cinzel',serif;font-weight:600;letter-spacing:.5px;}
-  .bs{background:rgba(106,175,230,.15);color:#6aafe6;border:1px solid rgba(106,175,230,.3);}
-  .bl{background:rgba(230,122,106,.15);color:#e67a6a;border:1px solid rgba(230,122,106,.3);}
-  .bu{background:rgba(201,168,76,.15);color:var(--gold2);border:1px solid rgba(201,168,76,.3);}
+.dist-value{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);}
+.dist-bar{height:2px;background:var(--border);border-radius:2px;margin-top:2px;overflow:hidden;}
+.dist-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;}
+.tf{color:#3daf65;}.tm{color:var(--gold);}.ts{color:#c0392b;}
 
-  /* MAP */
-  #map-container{background:var(--bg2);border:1px solid var(--border-gold);border-radius:4px;padding:14px;}
-  #map-wrap{position:relative;overflow:auto;cursor:grab;border:1px solid var(--border);border-radius:3px;background:#06040200;max-height:620px;}
-  #map-wrap:active{cursor:grabbing;}
-  #map-canvas{display:block;}
-  .map-controls{display:flex;gap:6px;margin-bottom:10px;align-items:center;flex-wrap:wrap;}
-  .zoom-btn{font-family:'Cinzel',serif;font-size:13px;padding:4px 12px;background:var(--bg3);border:1px solid var(--border-gold);color:var(--gold);border-radius:3px;cursor:pointer;}
-  .zoom-btn:hover{background:var(--border-gold);}
-  .map-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:12px;}
-  .li{display:flex;align-items:center;gap:5px;}
-  .ld{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.bsz{font-size:9px;padding:1px 5px;border-radius:9px;font-family:'Cinzel',serif;font-weight:600;letter-spacing:.5px;}
+.bs{background:rgba(106,175,230,.15);color:#6aafe6;border:1px solid rgba(106,175,230,.3);}
+.bl{background:rgba(230,122,106,.15);color:#e67a6a;border:1px solid rgba(230,122,106,.3);}
+.bu{background:rgba(201,168,76,.15);color:var(--gold2);border:1px solid rgba(201,168,76,.3);}
 
-  #tt{position:fixed;background:#1a1510;border:1px solid var(--border-gold);color:var(--text);padding:8px 11px;border-radius:4px;font-size:12px;pointer-events:none;z-index:999;display:none;max-width:230px;box-shadow:0 4px 16px rgba(0,0,0,.6);}
-  #tt .tn{font-family:'Cinzel',serif;color:var(--gold2);font-size:13px;margin-bottom:3px;}
-  #tt .td{color:var(--text-dim);font-size:12px;line-height:1.5;}
+/* HERO BOOTS BADGE */
+.boots-badge{font-size:9px;padding:1px 5px;border-radius:9px;font-family:'Cinzel',serif;letter-spacing:.5px;background:rgba(52,152,219,.15);color:#5dade2;border:1px solid rgba(52,152,219,.3);}
 
-  ::-webkit-scrollbar{width:5px;height:5px;}
-  ::-webkit-scrollbar-track{background:var(--bg);}
-  ::-webkit-scrollbar-thumb{background:var(--border-gold);border-radius:3px;}
+/* TROOP REF TABLE */
+.ref-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;}
+.ref-table th{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;color:var(--gold);background:var(--bg3);text-align:center;padding:6px 8px;border:1px solid var(--border-gold);}
+.ref-table td{padding:6px 9px;border:1px solid var(--border);text-align:center;vertical-align:middle;}
+.ref-table tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+.ref-table td:first-child{text-align:left;font-family:'Cinzel',serif;font-size:11px;color:var(--text-dim);}
+.ref-hdr{background:var(--bg3) !important;}
+.tier-minor{color:#6aafe6;font-weight:600;}
+.tier-major{color:#e67a6a;font-weight:600;}
+.tier-unique{color:var(--gold2);font-weight:600;}
+
+/* ORGANIZER */
+.org-panel{background:var(--bg2);border:1px solid var(--border-gold);border-radius:4px;padding:14px;margin-bottom:16px;}
+.org-title{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);margin-bottom:12px;letter-spacing:2px;text-transform:uppercase;}
+.send-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:8px;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;}
+.send-result{background:var(--bg);border:1px solid var(--border-gold);border-radius:4px;padding:12px;margin-top:12px;}
+.send-result-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);align-items:center;font-size:13px;}
+.send-result-row:last-child{border-bottom:none;}
+.send-result-hdr{font-family:'Cinzel',serif;font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;}
+.send-time-ok{color:var(--green2);font-family:'Cinzel',serif;font-size:12px;}
+.send-time-past{color:#e74c3c;font-size:12px;}
+
+/* MAP */
+#map-container{background:var(--bg2);border:1px solid var(--border-gold);border-radius:4px;padding:12px;}
+#map-wrap{position:relative;overflow:auto;cursor:grab;border:1px solid var(--border);border-radius:3px;background:#04030180;max-height:600px;}
+#map-wrap:active{cursor:grabbing;}
+#map-canvas{display:block;}
+.map-controls{display:flex;gap:6px;margin-bottom:8px;align-items:center;flex-wrap:wrap;}
+.zoom-btn{font-family:'Cinzel',serif;font-size:12px;padding:3px 11px;background:var(--bg3);border:1px solid var(--border-gold);color:var(--gold);border-radius:3px;cursor:pointer;}
+.zoom-btn:hover{background:var(--border-gold);}
+.map-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;font-size:11px;}
+.li{display:flex;align-items:center;gap:4px;}
+.ld{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+#tt{position:fixed;background:#1a1510;border:1px solid var(--border-gold);color:var(--text);padding:8px 11px;border-radius:4px;font-size:12px;pointer-events:none;z-index:999;display:none;max-width:240px;box-shadow:0 4px 16px rgba(0,0,0,.7);}
+#tt .tn{font-family:'Cinzel',serif;color:var(--gold2);font-size:12px;margin-bottom:3px;}
+#tt .td{color:var(--text-dim);font-size:11px;line-height:1.5;}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border-gold);border-radius:3px;}
+
+.info-box{background:rgba(201,168,76,.06);border:1px solid var(--border-gold);border-radius:4px;padding:8px 12px;font-size:12px;color:var(--text-dim);margin-bottom:12px;}
+.sect-title{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border);}
 </style>
 </head>
 <body>
 
 <header>
   <div class="container">
-    <h1>⚔ Artéfacts — Calculateur de Distance ⚔</h1>
-    <div class="subtitle">Travian Legends · Distance Chebyshev · Alliance N-A · frx2</div>
+    <div class="header-title-wrap">
+      <h1>⚔ Artéfacts — Calculateur de Distance ⚔</h1>
+
+      <!-- MANGA CAT MASCOT — SVG inline -->
+      <svg class="cat-mascot" viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;">
+
+        <!-- SHADOW -->
+        <ellipse cx="45" cy="108" rx="18" ry="4" fill="rgba(0,0,0,0.3)"/>
+
+        <!-- TAIL — behind body -->
+        <path d="M58 85 Q82 90 80 70 Q78 55 68 60" stroke="#d4a96a" stroke-width="7" stroke-linecap="round" fill="none"/>
+        <path d="M58 85 Q82 90 80 70 Q78 55 68 60" stroke="#f5d49a" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.5"/>
+
+        <!-- BODY -->
+        <ellipse cx="45" cy="82" rx="24" ry="22" fill="#d4a96a"/>
+        <ellipse cx="45" cy="82" rx="24" ry="22" fill="url(#bodyGrad)"/>
+        <!-- belly patch -->
+        <ellipse cx="45" cy="86" rx="14" ry="14" fill="#f5d49a" opacity="0.7"/>
+
+        <!-- PAWS sitting -->
+        <ellipse cx="32" cy="101" rx="9" ry="5" fill="#c49060"/>
+        <ellipse cx="58" cy="101" rx="9" ry="5" fill="#c49060"/>
+        <!-- paw toes -->
+        <path d="M27 100 Q29 97 31 100" stroke="#a07040" stroke-width="1.2" fill="none"/>
+        <path d="M31 99 Q33 96 35 99" stroke="#a07040" stroke-width="1.2" fill="none"/>
+        <path d="M35 100 Q37 97 39 100" stroke="#a07040" stroke-width="1.2" fill="none"/>
+        <path d="M53 99 Q55 96 57 99" stroke="#a07040" stroke-width="1.2" fill="none"/>
+        <path d="M57 100 Q59 97 61 100" stroke="#a07040" stroke-width="1.2" fill="none"/>
+        <path d="M61 99 Q63 96 65 99" stroke="#a07040" stroke-width="1.2" fill="none"/>
+
+        <!-- HEAD -->
+        <ellipse cx="45" cy="52" rx="22" ry="20" fill="#d4a96a"/>
+        <ellipse cx="45" cy="52" rx="22" ry="20" fill="url(#headGrad)"/>
+
+        <!-- EARS (cat, pointy) -->
+        <polygon points="26,42 20,18 36,36" fill="#d4a96a"/>
+        <polygon points="26,42 20,18 36,36" fill="url(#headGrad)" opacity="0.6"/>
+        <polygon points="27,40 22,22 34,36" fill="#e8b0a0" opacity="0.7"/>
+        <polygon points="64,42 70,18 54,36" fill="#d4a96a"/>
+        <polygon points="64,42 70,18 54,36" fill="url(#headGrad)" opacity="0.6"/>
+        <polygon points="63,40 68,22 56,36" fill="#e8b0a0" opacity="0.7"/>
+
+        <!-- FACE STRIPES (manga markings) -->
+        <path d="M33 48 Q30 50 28 54" stroke="#b88050" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+        <path d="M35 50 Q32 53 31 57" stroke="#b88050" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.5"/>
+        <path d="M57 48 Q60 50 62 54" stroke="#b88050" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+        <path d="M55 50 Q58 53 59 57" stroke="#b88050" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.5"/>
+
+        <!-- MANGA EYES — big expressive -->
+        <!-- left eye -->
+        <ellipse cx="37" cy="52" rx="7.5" ry="8.5" fill="white"/>
+        <ellipse cx="37" cy="53" rx="6" ry="7" fill="#1a8a5c"/>
+        <ellipse cx="37" cy="53" rx="4" ry="5.5" fill="#0d1a10"/>
+        <ellipse cx="35" cy="50" rx="2" ry="2.5" fill="white" opacity="0.9"/>
+        <ellipse cx="40" cy="55" rx="1" ry="1.5" fill="white" opacity="0.5"/>
+        <!-- left eye shine lines (manga style) -->
+        <line x1="31" y1="47" x2="37" y2="47" stroke="white" stroke-width="1.2" opacity="0.3"/>
+
+        <!-- right eye -->
+        <ellipse cx="53" cy="52" rx="7.5" ry="8.5" fill="white"/>
+        <ellipse cx="53" cy="53" rx="6" ry="7" fill="#1a8a5c"/>
+        <ellipse cx="53" cy="53" rx="4" ry="5.5" fill="#0d1a10"/>
+        <ellipse cx="51" cy="50" rx="2" ry="2.5" fill="white" opacity="0.9"/>
+        <ellipse cx="56" cy="55" rx="1" ry="1.5" fill="white" opacity="0.5"/>
+        <line x1="47" y1="47" x2="53" y2="47" stroke="white" stroke-width="1.2" opacity="0.3"/>
+
+        <!-- NOSE -->
+        <path d="M42 60 L45 63 L48 60 Q45 58 42 60Z" fill="#e07080"/>
+        <!-- MOUTH -->
+        <path d="M45 63 Q41 67 38 65" stroke="#c05060" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M45 63 Q49 67 52 65" stroke="#c05060" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+        <!-- WHISKERS -->
+        <line x1="24" y1="60" x2="41" y2="62" stroke="#f0e0c0" stroke-width="1" opacity="0.8"/>
+        <line x1="22" y1="63" x2="40" y2="63" stroke="#f0e0c0" stroke-width="1" opacity="0.7"/>
+        <line x1="24" y1="66" x2="41" y2="64" stroke="#f0e0c0" stroke-width="1" opacity="0.6"/>
+        <line x1="66" y1="60" x2="49" y2="62" stroke="#f0e0c0" stroke-width="1" opacity="0.8"/>
+        <line x1="68" y1="63" x2="50" y2="63" stroke="#f0e0c0" stroke-width="1" opacity="0.7"/>
+        <line x1="66" y1="66" x2="49" y2="64" stroke="#f0e0c0" stroke-width="1" opacity="0.6"/>
+
+        <!-- ═══ CASQUE GAULOIS ═══ -->
+        <!-- base du casque -->
+        <path d="M24 42 Q24 28 45 26 Q66 28 66 42 L63 44 Q45 30 27 44Z" fill="#8b7340"/>
+        <path d="M24 42 Q24 28 45 26 Q66 28 66 42 L63 44 Q45 30 27 44Z" fill="url(#helmetGrad)"/>
+        <!-- rebord bas du casque -->
+        <path d="M22 43 Q45 33 68 43 L66 47 Q45 36 24 47Z" fill="#6b5520"/>
+        <path d="M22 43 Q45 33 68 43 L66 47 Q45 36 24 47Z" fill="#c9a84c" opacity="0.3"/>
+        <!-- reflet doré sur le casque -->
+        <path d="M30 35 Q45 29 60 35" stroke="#e8c96a" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+        <!-- rivets dorés -->
+        <circle cx="28" cy="42" r="2" fill="#c9a84c"/>
+        <circle cx="62" cy="42" r="2" fill="#c9a84c"/>
+        <circle cx="45" cy="28" r="2" fill="#c9a84c"/>
+        <!-- AILES du casque gaulois — gauche -->
+        <path d="M22 38 Q8 30 6 20 Q12 24 18 28 Q14 18 16 10 Q22 18 22 28 Q28 22 32 18 Q28 28 24 35Z" fill="#8b7340"/>
+        <path d="M22 38 Q8 30 6 20 Q12 24 18 28 Q14 18 16 10 Q22 18 22 28 Q28 22 32 18 Q28 28 24 35Z" fill="url(#wingGrad)"/>
+        <path d="M18 28 Q14 20 16 12" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <path d="M22 30 Q20 22 22 15" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.5"/>
+        <!-- AILES — droite -->
+        <path d="M68 38 Q82 30 84 20 Q78 24 72 28 Q76 18 74 10 Q68 18 68 28 Q62 22 58 18 Q62 28 66 35Z" fill="#8b7340"/>
+        <path d="M68 38 Q82 30 84 20 Q78 24 72 28 Q76 18 74 10 Q68 18 68 28 Q62 22 58 18 Q62 28 66 35Z" fill="url(#wingGrad)"/>
+        <path d="M72 28 Q76 20 74 12" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <path d="M68 30 Q70 22 68 15" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.5"/>
+        <!-- Cimier sur le dessus (plume/crin) -->
+        <path d="M40 26 Q38 16 40 8 Q43 4 45 2 Q47 4 50 8 Q52 16 50 26" fill="#c0392b" opacity="0.9"/>
+        <path d="M42 24 Q40 14 42 7 Q44 4 45 3 Q46 4 48 7 Q50 14 48 24" fill="#e74c3c" opacity="0.7"/>
+        <path d="M44 22 Q43 12 44 6 Q45 4 46 6 Q47 12 46 22" fill="#ff8080" opacity="0.5"/>
+
+        <!-- outline léger du corps -->
+        <ellipse cx="45" cy="82" rx="24" ry="22" fill="none" stroke="#a07840" stroke-width="1.2" opacity="0.4"/>
+        <ellipse cx="45" cy="52" rx="22" ry="20" fill="none" stroke="#a07840" stroke-width="1.2" opacity="0.4"/>
+
+        <!-- DÉGRADÉS -->
+        <defs>
+          <radialGradient id="bodyGrad" cx="40%" cy="30%">
+            <stop offset="0%" stop-color="#f0c080" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#a07030" stop-opacity="0.2"/>
+          </radialGradient>
+          <radialGradient id="headGrad" cx="35%" cy="25%">
+            <stop offset="0%" stop-color="#f0c080" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#9a6828" stop-opacity="0.2"/>
+          </radialGradient>
+          <linearGradient id="helmetGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#e8c96a" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#5a3e10" stop-opacity="0.3"/>
+          </linearGradient>
+          <linearGradient id="wingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#5a3e10" stop-opacity="0.2"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <!-- end cat -->
+
+    </div>
+    <div class="subtitle">Travian Legends · Alliance N-A · frx2 · v3</div>
   </div>
 </header>
 
@@ -149,61 +315,33 @@
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('saisie')">⚙ Saisie</button>
     <button class="tab-btn" onclick="switchTab('resultats')">📊 Résultats</button>
+    <button class="tab-btn" onclick="switchTab('organisateur')">🗓 Organisateur</button>
+    <button class="tab-btn" onclick="switchTab('troupes')">⚔ Troupes</button>
     <button class="tab-btn" onclick="switchTab('carte')">🗺 Carte</button>
   </div>
 
-  <!-- SAISIE -->
+  <!-- ══════════════════════════════════════ SAISIE -->
   <div id="tab-saisie" class="tab-content active">
-    <div class="settings-bar">
-      <div class="field">
-        <label>Vitesse serveur</label>
-        <select id="speed">
-          <option value="1">×1 Standard</option>
-          <option value="2" selected>×2 frx2</option>
-          <option value="3">×3</option>
-          <option value="5">×5</option>
-          <option value="10">×10</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>PT niveau (défaut)</label>
-        <select id="tournament">
-          <option value="0">Niv. 0 — aucune</option>
-          <option value="1">Niv. 1 — +20%</option>
-          <option value="2">Niv. 2 — +40%</option>
-          <option value="3">Niv. 3 — +60%</option>
-          <option value="4">Niv. 4 — +80%</option>
-          <option value="5">Niv. 5 — +100%</option>
-          <option value="10">Niv. 10 — +200%</option>
-          <option value="15">Niv. 15 — +300%</option>
-          <option value="20">Niv. 20 — +400%</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Unité offensive</label>
-        <select id="tribe">
-          <option value="teuton">Teuton — Cav. TK (9 c/h)</option>
-          <option value="roman">Romain — EC (10 c/h)</option>
-          <option value="gaul">Gaulois — Druide (10 c/h)</option>
-          <option value="hun" selected>Hun — Mardandier (14 c/h)</option>
-          <option value="egypt">Égyptien — Cav. Ankh (9 c/h)</option>
-          <option value="sparta">Spartiate — Corinthien (12 c/h)</option>
-        </select>
-      </div>
-    </div>
+    <div class="info-box">ℹ️ Chaque village a sa propre <b>faction</b>, <b>PT niveau</b> et <b>Bottes héros</b>. La colonne "Unité" se calcule automatiquement selon la faction.</div>
 
     <div class="main-grid">
       <!-- JOUEURS -->
       <div class="panel">
         <div class="panel-header"><span class="panel-icon">🏰</span><h2>Villages de l'Alliance</h2></div>
         <div class="panel-body">
-          <div class="entry-grid pg" style="margin-bottom:6px;">
+          <!-- En-têtes -->
+          <div class="eg pr1" style="margin-bottom:4px;">
             <div><label>Joueur / Village</label></div>
             <div><label>Rôle</label></div>
             <div><label>X</label></div>
             <div><label>Y</label></div>
-            <div><label>PT niv.</label></div>
             <div></div>
+          </div>
+          <div class="eg pr2" style="margin-bottom:8px;">
+            <div><label>Faction</label></div>
+            <div><label>PT Niv.</label></div>
+            <div><label>Bottes Héros</label></div>
+            <div><label>Niv. Mur</label></div>
           </div>
           <div id="players-list"></div>
           <button class="btn btn-add" onclick="addPlayer()">+ Ajouter un village</button>
@@ -214,7 +352,7 @@
       <div class="panel">
         <div class="panel-header"><span class="panel-icon">💎</span><h2>Artéfacts à Conquérir</h2></div>
         <div class="panel-body">
-          <div class="entry-grid ag" style="margin-bottom:6px;">
+          <div class="eg ar" style="margin-bottom:4px;">
             <div><label>Nom / Type</label></div>
             <div><label>X</label></div>
             <div><label>Y</label></div>
@@ -230,21 +368,167 @@
     <button class="btn btn-gold btn-calc" onclick="calculate()">⚔ &nbsp; CALCULER LES DISTANCES &nbsp; ⚔</button>
   </div>
 
-  <!-- RÉSULTATS -->
+  <!-- ══════════════════════════════════════ RÉSULTATS -->
   <div id="tab-resultats" class="tab-content">
     <div id="results-body">
-      <div style="text-align:center;padding:50px 20px;color:var(--text-dim);font-style:italic;">Lance le calcul depuis l'onglet Saisie.</div>
+      <div style="text-align:center;padding:40px;color:var(--text-dim);font-style:italic;">Lance le calcul depuis l'onglet Saisie.</div>
     </div>
   </div>
 
-  <!-- CARTE -->
+  <!-- ══════════════════════════════════════ ORGANISATEUR -->
+  <div id="tab-organisateur" class="tab-content">
+    <div class="org-panel">
+      <div class="org-title">🗓 Organisateur d'Envois</div>
+      <div class="info-box">Définis une heure d'arrivée cible. L'outil calcule <b>l'heure d'envoi exacte</b> pour chaque joueur selon sa distance à l'artéfact, sa faction et son PT.</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div>
+          <label>Artéfact cible</label>
+          <select id="org-artefact">
+            <option value="">— Sélectionner —</option>
+          </select>
+        </div>
+        <div>
+          <label>Heure d'arrivée cible</label>
+          <input type="datetime-local" id="org-arrival" step="1">
+        </div>
+        <div>
+          <label>Type d'envoi</label>
+          <select id="org-type">
+            <option value="hero">Héros (avec bottes)</option>
+            <option value="troop">Troupe offensive</option>
+            <option value="cata">Catapultes</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-blue btn-calc" onclick="calcOrganizer()">🗓 &nbsp; CALCULER LES ENVOIS &nbsp; 🗓</button>
+
+      <div id="org-results" style="display:none;">
+        <div class="send-result">
+          <div class="send-result-row send-result-hdr">
+            <div>Joueur / Village</div>
+            <div>Distance</div>
+            <div>Temps trajet</div>
+            <div>Heure d'envoi</div>
+          </div>
+          <div id="org-rows"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COORDINATION MULTI-JOUEURS -->
+    <div class="org-panel">
+      <div class="org-title">⚔ Coordination Vagues Simultanées</div>
+      <div class="info-box">Pour que plusieurs vagues arrivent en même temps : définis l'heure commune et chaque joueur voit son heure d'envoi exacte.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div>
+          <label>Artéfact cible</label>
+          <select id="sync-artefact"></select>
+        </div>
+        <div>
+          <label>Heure d'arrivée synchronisée</label>
+          <input type="datetime-local" id="sync-arrival" step="1">
+        </div>
+      </div>
+      <div class="sect-title">Joueurs à synchroniser</div>
+      <div id="sync-players-list"></div>
+      <button class="btn btn-add" onclick="addSyncPlayer()">+ Ajouter un joueur à la vague</button>
+      <button class="btn btn-blue btn-calc" onclick="calcSync()" style="margin-top:12px;">⚡ Synchroniser les Vagues</button>
+      <div id="sync-results" style="display:none;">
+        <div class="send-result" style="margin-top:12px;">
+          <div class="send-result-row send-result-hdr">
+            <div>Joueur</div><div>Distance</div><div>Temps trajet</div><div>Heure d'envoi</div>
+          </div>
+          <div id="sync-rows"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ TROUPES -->
+  <div id="tab-troupes" class="tab-content">
+    <div class="panel" style="margin-bottom:16px;">
+      <div class="panel-header"><span class="panel-icon">⚔</span><h2>Troupes nécessaires pour ouvrir un Artéfact</h2></div>
+      <div class="panel-body">
+        <div class="info-box">Basé sur la défense Natar standard. La défense réelle = <b>Base × vitesse serveur × multiplicateur aléatoire</b>. Ces valeurs sont pour ×2 (frx2). Scoutez toujours avant d'attaquer !</div>
+
+        <div class="sect-title">Défense estimée par taille (serveur ×2)</div>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Taille</th><th>Défense inf.</th><th>Défense cav.</th><th>Muraille</th><th>Trésor niv.</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="tier-minor">Petit (Mineur)</span></td><td>~30 000</td><td>~20 000</td><td>0–1</td><td>20</td></tr>
+            <tr><td><span class="tier-major">Grand (Majeur)</span></td><td>~60 000</td><td>~40 000</td><td>0–1</td><td>20</td></tr>
+            <tr><td><span class="tier-unique">Unique</span></td><td>~100 000</td><td>~70 000</td><td>0–1</td><td>20</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sect-title">Vagues recommandées par faction — Artéfact Petit (Mineur)</div>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Faction</th><th>Unité principale</th><th>Nb estimé</th><th>+ Héros</th><th>Catapultes (trésor)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>🐎 Huns</td><td>Mardandier</td><td>~2 500</td><td>Oui (Cor de Natar)</td><td>55 catas</td></tr>
+            <tr><td>🦅 Romains</td><td>Imp. / EC</td><td>~2 500</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🌿 Gaulois</td><td>TT / Druide</td><td>~2 500</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🪓 Teutons</td><td>TK / Pala.</td><td>~2 800</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🏺 Égyptiens</td><td>Cav. Ankh</td><td>~2 500</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🛡 Spartiates</td><td>Corinthien</td><td>~2 500</td><td>Oui</td><td>55 catas</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sect-title">Vagues recommandées — Artéfact Grand (Majeur)</div>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Faction</th><th>Unité principale</th><th>Nb estimé</th><th>+ Héros</th><th>Catapultes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>🐎 Huns</td><td>Mardandier</td><td>~5 000</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🦅 Romains</td><td>Imp. / EC</td><td>~5 000</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🌿 Gaulois</td><td>TT / Druide</td><td>~5 000</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🪓 Teutons</td><td>TK / Pala.</td><td>~5 500</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🏺 Égyptiens</td><td>Cav. Ankh</td><td>~5 000</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🛡 Spartiates</td><td>Corinthien</td><td>~5 000</td><td>Oui</td><td>55 catas</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sect-title">Vagues recommandées — Artéfact Unique</div>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Faction</th><th>Unité principale</th><th>Nb estimé</th><th>+ Héros</th><th>Catapultes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>🐎 Huns</td><td>Mardandier</td><td>~8 000</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🦅 Romains</td><td>Imp. / EC</td><td>~8 000</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🌿 Gaulois</td><td>TT / Druide</td><td>~8 000</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🪓 Teutons</td><td>TK / Pala.</td><td>~9 000</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🏺 Égyptiens</td><td>Cav. Ankh</td><td>~8 000</td><td>Oui</td><td>55 catas</td></tr>
+            <tr><td>🛡 Spartiates</td><td>Corinthien</td><td>~8 000</td><td>Oui</td><td>55 catas</td></tr>
+          </tbody>
+        </table>
+
+        <div class="info-box" style="margin-top:14px;">
+          💡 <b>Rappel stratégie 3 vagues :</b><br>
+          <b>Vague 1 — Nettoyeur :</b> Off + Héros (Cor de Natar équipé) → détruit la défense<br>
+          <b>Vague 2 — Catapultes :</b> 55+ catas → détruit le Trésor niv.20 des Natars<br>
+          <b>Vague 3 — Héros :</b> Héros seul ou avec escorte légère → capture l'artéfact<br>
+          ⚠️ Le village d'envoi doit avoir une <b>Chambre au Trésor niv.10</b> (petit) ou <b>niv.20</b> (grand/unique) <b>vide</b> au moment de l'arrivée.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ CARTE -->
   <div id="tab-carte" class="tab-content">
     <div id="map-container">
       <div class="map-controls">
-        <button class="zoom-btn" onclick="zoomMap(1.5)">＋ Zoom</button>
-        <button class="zoom-btn" onclick="zoomMap(0.67)">－ Zoom</button>
-        <button class="zoom-btn" onclick="resetZoom()">↺ Reset</button>
-        <span style="font-size:12px;color:var(--text-dim);" id="map-info">Glisser pour naviguer · Survoler pour les infos</span>
+        <button class="zoom-btn" onclick="zoomMap(1.5)">＋</button>
+        <button class="zoom-btn" onclick="zoomMap(0.67)">－</button>
+        <button class="zoom-btn" onclick="resetZoom()">↺</button>
+        <span style="font-size:11px;color:var(--text-dim);">Glisser · Survoler pour les infos</span>
       </div>
       <div id="map-wrap"><canvas id="map-canvas"></canvas></div>
       <div class="map-legend">
@@ -252,97 +536,136 @@
         <div class="li"><div class="ld" style="background:#e74c3c;"></div><span>Off</span></div>
         <div class="li"><div class="ld" style="background:#e67e22;"></div><span>Off+Cata</span></div>
         <div class="li"><div class="ld" style="background:#5dade2;"></div><span>CDT20</span></div>
+        <div class="li"><div class="ld" style="background:#1abc9c;"></div><span>CDT10</span></div>
         <div class="li"><div class="ld" style="background:#af7ac5;"></div><span>Cata</span></div>
         <div class="li"><div class="ld" style="background:#888;"></div><span>Autre</span></div>
-        <div class="li" style="color:var(--text-dim);font-size:11px;margin-left:8px;">— Ligne pointillée = joueur le plus proche de chaque artéfact</div>
+        <div class="li" style="color:var(--text-dim);font-size:10px;margin-left:6px;">— pointillé = lien vers artéfact le + proche</div>
       </div>
     </div>
   </div>
 </div>
 
-<footer style="text-align:center;padding:18px;color:var(--text-dim);font-size:12px;border-top:1px solid var(--border);margin-top:14px;">
-  ✦ &nbsp; Travian Legends — Outil Alliance N-A · frx2 &nbsp; ✦
+<footer style="text-align:center;padding:16px;color:var(--text-dim);font-size:11px;border-top:1px solid var(--border);margin-top:12px;">
+  ✦ Travian Legends — Outil Alliance N-A · frx2 ✦
 </footer>
 
 <script>
-// ════════════════════════════════════════════════
-// CONSTANTES
-// ════════════════════════════════════════════════
-const TRIBE_SPEEDS = {
-  teuton:{speed:9},roman:{speed:10},gaul:{speed:10},
-  hun:{speed:14},egypt:{speed:9},sparta:{speed:12}
+// ══════════════════════════════════════════════════
+// DONNÉES
+// ══════════════════════════════════════════════════
+const FACTIONS = {
+  hun:    {label:'Huns',    emoji:'🐎', offUnit:'Mardandier',   offSpeed:14, heroSpeed:7},
+  roman:  {label:'Romains', emoji:'🦅', offUnit:'EC',           offSpeed:10, heroSpeed:10},
+  gaul:   {label:'Gaulois', emoji:'🌿', offUnit:'Druide',       offSpeed:10, heroSpeed:7},
+  teuton: {label:'Teutons', emoji:'🪓', offUnit:'Cav. TK',      offSpeed:9,  heroSpeed:7},
+  egypt:  {label:'Égyp.',   emoji:'🏺', offUnit:'Cav. Ankh',    offSpeed:9,  heroSpeed:7},
+  sparta: {label:'Spart.',  emoji:'🛡', offUnit:'Corinthien',   offSpeed:12, heroSpeed:7},
 };
+// Catapultes speeds
+const CATA_SPEEDS = {hun:3,roman:3,gaul:3,teuton:3,egypt:3,sparta:3};
+// Bottes héros : +0%, +20%, +40%
+const BOOTS = {0:{label:'Sans bottes',bonus:1},1:{label:'Palier 1 (+20%)',bonus:1.2},2:{label:'Palier 2 (+40%)',bonus:1.4}};
 const ROLES = {
-  off:    {label:'Off',     cls:'role-off',    col:'#e74c3c'},
-  offcata:{label:'Off+Cata',cls:'role-offcata',col:'#e67e22'},
-  cdt20:  {label:'CDT20',   cls:'role-cdt20',  col:'#5dade2'},
-  cata:   {label:'Cata',    cls:'role-cata',   col:'#af7ac5'},
-  other:  {label:'Autre',   cls:'role-other',  col:'#888888'},
+  off:    {label:'Off',      cls:'role-off',    col:'#e74c3c'},
+  offcata:{label:'Off+Cata', cls:'role-offcata',col:'#e67e22'},
+  cdt20:  {label:'CDT20',    cls:'role-cdt20',  col:'#5dade2'},
+  cdt10:  {label:'CDT10',    cls:'role-cdt10',  col:'#1abc9c'},
+  cata:   {label:'Cata',     cls:'role-cata',   col:'#af7ac5'},
+  other:  {label:'Autre',    cls:'role-other',  col:'#888888'},
 };
-const ARTEFACT_TYPES = ['Bottes du Messager','Diète','Oeil',"Oeil de l'Éclaireur",'Architecte','Grande Diète','Grandes Bottes','Grand Architecte','Artéfact Unique','Autre'];
-const MAP_RANGE = 200;
+const ART_TYPES=['Bottes du Messager','Diète','Oeil',"Oeil de l'Éclaireur",'Architecte','Grande Diète','Grandes Bottes','Grand Architecte','Artéfact Unique','Autre'];
+const MAP_RANGE=200;
+const SERVER_SPEED=2; // frx2 — used for organizer
 
-// ════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 // MATH
-// ════════════════════════════════════════════════
-const cheby = (x1,y1,x2,y2) => Math.max(Math.abs(x2-x1),Math.abs(y2-y1));
-const ptBonus = lvl => 1 + parseInt(lvl)*0.2;
-const travel = (dist,tribe,spd,pt) => dist/(TRIBE_SPEEDS[tribe].speed*parseInt(spd)*ptBonus(pt));
-function fmtTime(h){
-  if(!h) return '—';
-  const t=Math.round(h*3600),hh=Math.floor(t/3600),mm=Math.floor((t%3600)/60),ss=t%60;
-  return hh>0?`${hh}h ${String(mm).padStart(2,'0')}min`:`${mm}min ${String(ss).padStart(2,'0')}s`;
-}
-const tcls = h => h<1?'tf':h<3?'tm':'ts';
+// ══════════════════════════════════════════════════
+const cheby=(x1,y1,x2,y2)=>Math.max(Math.abs(x2-x1),Math.abs(y2-y1));
+const ptBonus=lvl=>1+parseInt(lvl||0)*0.2;
 
-// ════════════════════════════════════════════════
+function effectiveSpeed(faction,pt,boots,type){
+  const f=FACTIONS[faction]||FACTIONS.hun;
+  const base=type==='hero'?f.heroSpeed:type==='cata'?3:f.offSpeed;
+  const bootsMult=type==='hero'?(BOOTS[boots||0]?.bonus||1):1;
+  return base*SERVER_SPEED*ptBonus(pt)*bootsMult;
+}
+
+function travelHours(dist,faction,pt,boots,type){
+  return dist/effectiveSpeed(faction,pt,boots,type);
+}
+
+function fmtTime(h){
+  if(!h||isNaN(h))return '—';
+  const t=Math.round(h*3600),hh=Math.floor(t/3600),mm=Math.floor((t%3600)/60),ss=t%60;
+  return hh>0?`${hh}h ${String(mm).padStart(2,'0')}min ${String(ss).padStart(2,'0')}s`:`${mm}min ${String(ss).padStart(2,'0')}s`;
+}
+
+function fmtDatetime(ms){
+  const d=new Date(ms);
+  return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+}
+
+const tcls=h=>h<1?'tf':h<3?'tm':'ts';
+
+// ══════════════════════════════════════════════════
 // TABS
-// ════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 function switchTab(name){
-  const tabs=['saisie','resultats','carte'];
-  tabs.forEach((t,i)=>{
+  ['saisie','resultats','organisateur','troupes','carte'].forEach((t,i)=>{
     document.getElementById('tab-'+t).classList.toggle('active',t===name);
     document.querySelectorAll('.tab-btn')[i].classList.toggle('active',t===name);
   });
-  if(name==='carte') setTimeout(drawMap,50);
+  if(name==='carte')setTimeout(drawMap,60);
+  if(name==='organisateur')refreshOrgSelects();
 }
 
-// ════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 // JOUEURS
-// ════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 let pc=0;
-function addPlayer(name='',role='off',x='',y='',pt=''){
+function addPlayer(name='',role='off',faction='hun',x='',y='',pt='0',boots='0'){
   pc++;const id=pc;
   const div=document.createElement('div');
   div.className='entry';div.id='player-'+id;
-  const ro=Object.entries(ROLES).map(([k,v])=>`<option value="${k}" ${k===role?'selected':''}>${v.label}</option>`).join('');
-  div.innerHTML=`<div class="entry-grid pg">
-    <div><input type="text" placeholder="Joueur – Village" value="${name}" id="pn${id}"></div>
-    <div><select id="pr${id}">${ro}</select></div>
-    <div><input type="number" placeholder="0" value="${x}" id="px${id}"></div>
-    <div><input type="number" placeholder="0" value="${y}" id="py${id}"></div>
-    <div><input type="number" placeholder="0" min="0" max="20" value="${pt}" id="pp${id}"></div>
-    <button class="btn btn-red" onclick="rm('player-${id}')">✕</button>
-  </div>`;
+
+  const ro=Object.entries(ROLES).map(([k,v])=>`<option value="${k}"${k===role?' selected':''}>${v.label}</option>`).join('');
+  const fo=Object.entries(FACTIONS).map(([k,v])=>`<option value="${k}"${k===faction?' selected':''}>${v.emoji} ${v.label}</option>`).join('');
+  const bo=[0,1,2].map(n=>`<option value="${n}"${String(n)===String(boots)?' selected':''}>${BOOTS[n].label}</option>`).join('');
+  const pto=[0,1,2,3,4,5,10,15,20].map(n=>`<option value="${n}"${String(n)===String(pt)?' selected':''}>Niv. ${n}</option>`).join('');
+
+  div.innerHTML=`
+    <div class="eg pr1">
+      <div><input type="text" placeholder="Joueur – Village" value="${name}" id="pn${id}"></div>
+      <div><select id="pr${id}">${ro}</select></div>
+      <div><input type="number" placeholder="0" value="${x}" id="px${id}"></div>
+      <div><input type="number" placeholder="0" value="${y}" id="py${id}"></div>
+      <button class="btn btn-red" onclick="rm('player-${id}')">✕</button>
+    </div>
+    <div class="eg pr2">
+      <div><select id="pf${id}">${fo}</select></div>
+      <div><select id="pp${id}">${pto}</select></div>
+      <div><select id="pb${id}">${bo}</select></div>
+      <div><input type="number" placeholder="Mur 0-20" value="0" min="0" max="20" id="pw${id}"></div>
+    </div>`;
   document.getElementById('players-list').appendChild(div);
 }
 
-// ════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 // ARTÉFACTS
-// ════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 let ac=0;
 function addArtefact(name='',x='',y='',size='small'){
   ac++;const id=ac;
   const div=document.createElement('div');
   div.className='entry';div.id='artefact-'+id;
-  div.innerHTML=`<div class="entry-grid ag">
+  div.innerHTML=`<div class="eg ar">
     <div><input type="text" placeholder="Bottes du Messager" value="${name}" id="an${id}" list="artdl"></div>
     <div><input type="number" placeholder="0" value="${x}" id="ax${id}"></div>
     <div><input type="number" placeholder="0" value="${y}" id="ay${id}"></div>
     <div><select id="as${id}">
-      <option value="small" ${size==='small'?'selected':''}>Petit</option>
-      <option value="large" ${size==='large'?'selected':''}>Grand</option>
-      <option value="unique" ${size==='unique'?'selected':''}>Unique</option>
+      <option value="small"${size==='small'?' selected':''}>Petit</option>
+      <option value="large"${size==='large'?' selected':''}>Grand</option>
+      <option value="unique"${size==='unique'?' selected':''}>Unique</option>
     </select></div>
     <button class="btn btn-red" onclick="rm('artefact-${id}')">✕</button>
   </div>`;
@@ -353,22 +676,30 @@ function rm(id){const e=document.getElementById(id);if(e)e.remove();}
 
 // datalist
 const dl=document.createElement('datalist');dl.id='artdl';
-ARTEFACT_TYPES.forEach(t=>{const o=document.createElement('option');o.value=t;dl.appendChild(o);});
+ART_TYPES.forEach(t=>{const o=document.createElement('option');o.value=t;dl.appendChild(o);});
 document.body.appendChild(dl);
 
-// ════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 // COLLECTE
-// ════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 function getPlayers(){
   const out=[];
   document.querySelectorAll('[id^="player-"]').forEach(el=>{
     const id=el.id.split('-')[1];
     const name=document.getElementById('pn'+id)?.value.trim();
-    const role=document.getElementById('pr'+id)?.value||'other';
+    if(!name)return;
     const xv=document.getElementById('px'+id)?.value;
     const yv=document.getElementById('py'+id)?.value;
-    const pt=document.getElementById('pp'+id)?.value||'0';
-    if(name&&xv!==''&&yv!='')out.push({name,role,x:parseInt(xv),y:parseInt(yv),pt:parseInt(pt)});
+    if(xv===''||yv==='')return;
+    out.push({
+      name,
+      role:document.getElementById('pr'+id)?.value||'other',
+      faction:document.getElementById('pf'+id)?.value||'hun',
+      x:parseInt(xv),y:parseInt(yv),
+      pt:parseInt(document.getElementById('pp'+id)?.value||0),
+      boots:parseInt(document.getElementById('pb'+id)?.value||0),
+      wall:parseInt(document.getElementById('pw'+id)?.value||0),
+    });
   });
   return out;
 }
@@ -379,46 +710,44 @@ function getArtefacts(){
     const name=document.getElementById('an'+id)?.value.trim();
     const xv=document.getElementById('ax'+id)?.value;
     const yv=document.getElementById('ay'+id)?.value;
-    const size=document.getElementById('as'+id)?.value||'small';
-    if(name&&xv!==''&&yv!='')out.push({name,x:parseInt(xv),y:parseInt(yv),size});
+    if(name&&xv!==''&&yv!=='')
+      out.push({name,x:parseInt(xv),y:parseInt(yv),size:document.getElementById('as'+id)?.value||'small'});
   });
   return out;
 }
 
-// ════════════════════════════════════════════════
-// CALCUL
-// ════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
+// CALCUL PRINCIPAL
+// ══════════════════════════════════════════════════
 function calculate(){
-  const players=getPlayers(),artefacts=getArtefacts();
+  const players=getPlayers(),arts=getArtefacts();
   if(!players.length){alert('Ajoute au moins un village !');return;}
-  if(!artefacts.length){alert('Ajoute au moins un artéfact !');return;}
+  if(!arts.length){alert('Ajoute au moins un artéfact !');return;}
 
-  const spd=document.getElementById('speed').value;
-  const dpt=document.getElementById('tournament').value;
-  const tribe=document.getElementById('tribe').value;
   const sL={small:'Petit',large:'Grand',unique:'Unique'};
   const sC={small:'bs',large:'bl',unique:'bu'};
-
   let html='';
-  artefacts.forEach(art=>{
+
+  arts.forEach(art=>{
     const rows=players.map(p=>{
-      const ptL=p.pt>0?p.pt:parseInt(dpt);
       const dist=cheby(p.x,p.y,art.x,art.y);
-      const hours=travel(dist,tribe,spd,ptL);
-      return{...p,dist,hours,ptL};
+      const hoursOff=travelHours(dist,p.faction,p.pt,p.boots,'off');
+      const hoursHero=travelHours(dist,p.faction,p.pt,p.boots,'hero');
+      return{...p,dist,hoursOff,hoursHero};
     }).sort((a,b)=>a.dist-b.dist);
 
     const cl=rows[0];
     const maxD=rows[rows.length-1]?.dist||1;
     const ri=ROLES[cl.role]||ROLES.other;
+    const fi=FACTIONS[cl.faction]||FACTIONS.hun;
 
     const banner=`<div class="closest-banner">
-      <span class="crown">👑</span>
+      <span style="font-size:16px;">👑</span>
       <div>
-        <div class="cn">${cl.name}</div>
-        <div class="cd">(${cl.x}|${cl.y}) &nbsp;·&nbsp; ${cl.dist} cases &nbsp;·&nbsp; <span class="${tcls(cl.hours)}">${fmtTime(cl.hours)}</span></div>
+        <div class="cn">${fi.emoji} ${cl.name}</div>
+        <div class="cd">(${cl.x}|${cl.y}) · ${cl.dist} cases · Off: <span class="${tcls(cl.hoursOff)}">${fmtTime(cl.hoursOff)}</span> · Héros: <span class="tf">${fmtTime(cl.hoursHero)}</span></div>
       </div>
-      <span class="role-badge ${ri.cls}" style="margin-left:auto;">${ri.label}</span>
+      <span class="rb ${ri.cls}" style="margin-left:auto;">${ri.label}</span>
     </div>`;
 
     const trs=rows.map((r,i)=>{
@@ -426,29 +755,35 @@ function calculate(){
       const bc=n===1?'rk1':n===2?'rk2':n===3?'rk3':'rko';
       const pct=Math.round(r.dist/maxD*100);
       const riR=ROLES[r.role]||ROLES.other;
-      const ptI=r.ptL>0?`<span style="color:var(--gold-dim);font-size:11px;"> PT${r.ptL}</span>`:'';
+      const fiR=FACTIONS[r.faction]||FACTIONS.hun;
+      const bootsTxt=r.boots>0?`<span class="boots-badge">Bottes P${r.boots}</span>`:'';
+      const ptTxt=r.pt>0?`<span style="color:var(--gold-dim);font-size:10px;">PT${r.pt}</span>`:'';
       return`<tr class="${n===1?'rf':''}">
-        <td><span class="rank-badge ${bc}">${n}</span></td>
+        <td><span class="rkb ${bc}">${n}</span></td>
         <td>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <span style="font-weight:600;">${r.name}</span>
-            <span class="role-badge ${riR.cls}">${riR.label}</span>
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+            <span style="font-weight:600;">${fiR.emoji} ${r.name}</span>
+            <span class="rb ${riR.cls}">${riR.label}</span>
+            ${bootsTxt}${ptTxt}
           </div>
-          <div style="font-size:11px;color:var(--text-dim);">(${r.x}|${r.y})</div>
+          <div style="font-size:10px;color:var(--text-dim);">(${r.x}|${r.y}) · ${fiR.label} · ${fiR.offUnit}</div>
         </td>
         <td>
           <div class="dist-value">${r.dist} cases</div>
           <div class="dist-bar"><div class="dist-fill" style="width:${pct}%"></div></div>
         </td>
-        <td><span class="${tcls(r.hours)}">${fmtTime(r.hours)}</span>${ptI}</td>
+        <td>
+          <div class="${tcls(r.hoursOff)}" style="font-size:12px;">Off: ${fmtTime(r.hoursOff)}</div>
+          <div class="tf" style="font-size:11px;">Héros: ${fmtTime(r.hoursHero)}</div>
+        </td>
       </tr>`;
     }).join('');
 
     html+=`<div class="artefact-block">
-      <div class="artefact-title">💎 ${art.name} <span class="badge-size ${sC[art.size]}">${sL[art.size]}</span> <span style="font-size:11px;color:var(--text-dim);">(${art.x}|${art.y})</span></div>
+      <div class="artefact-title">💎 ${art.name} <span class="bsz ${sC[art.size]}">${sL[art.size]}</span> <span style="font-size:10px;color:var(--text-dim);">(${art.x}|${art.y})</span></div>
       ${banner}
       <table class="ranking-table">
-        <thead><tr><th>#</th><th>Village</th><th>Distance</th><th>Temps</th></tr></thead>
+        <thead><tr><th>#</th><th>Village</th><th>Distance</th><th>Temps de trajet</th></tr></thead>
         <tbody>${trs}</tbody>
       </table>
     </div>`;
@@ -458,83 +793,186 @@ function calculate(){
   switchTab('resultats');
 }
 
-// ════════════════════════════════════════════════
-// CARTE
-// ════════════════════════════════════════════════
-let mapScale=2;
+// ══════════════════════════════════════════════════
+// ORGANISATEUR
+// ══════════════════════════════════════════════════
+let syncPc=0;
 
-function w2c(wx,wy,scale){
-  return{cx:Math.round((wx+MAP_RANGE)*scale),cy:Math.round((MAP_RANGE-wy)*scale)};
+function refreshOrgSelects(){
+  const arts=getArtefacts();
+  const opts=arts.length?arts.map(a=>`<option value="${a.x}_${a.y}">${a.name} (${a.x}|${a.y})</option>`).join(''):'<option value="">Ajoute des artéfacts dans Saisie</option>';
+  document.getElementById('org-artefact').innerHTML=opts;
+  document.getElementById('sync-artefact').innerHTML=opts;
 }
 
+function getArtFromSelect(selId){
+  const val=document.getElementById(selId)?.value;
+  if(!val)return null;
+  const [x,y]=val.split('_').map(Number);
+  return getArtefacts().find(a=>a.x===x&&a.y===y)||null;
+}
+
+function calcOrganizer(){
+  const players=getPlayers();
+  const art=getArtFromSelect('org-artefact');
+  const arrivalStr=document.getElementById('org-arrival').value;
+  const type=document.getElementById('org-type').value;
+  if(!art||!arrivalStr||!players.length){alert('Sélectionne un artéfact, une heure et assure-toi d\'avoir des joueurs.');return;}
+
+  const arrivalMs=new Date(arrivalStr).getTime();
+  const rows=players.map(p=>{
+    const dist=cheby(p.x,p.y,art.x,art.y);
+    const hours=travelHours(dist,p.faction,p.pt,p.boots,type);
+    const sendMs=arrivalMs-hours*3600000;
+    const sendDate=new Date(sendMs);
+    const isPast=sendMs<Date.now();
+    return{...p,dist,hours,sendMs,sendDate,isPast};
+  }).sort((a,b)=>a.dist-b.dist);
+
+  const rowsHTML=rows.map(r=>{
+    const fi=FACTIONS[r.faction]||FACTIONS.hun;
+    const ri=ROLES[r.role]||ROLES.other;
+    const unitLabel=type==='hero'?'Héros':type==='cata'?'Cata':fi.offUnit;
+    return`<div class="send-result-row">
+      <div>
+        <span style="font-weight:600;">${fi.emoji} ${r.name}</span>
+        <span class="rb ${ri.cls}" style="margin-left:4px;">${ri.label}</span>
+        <div style="font-size:10px;color:var(--text-dim);">${fi.label} · ${unitLabel} · ${r.dist} cases</div>
+      </div>
+      <div class="dist-value">${r.dist} cases</div>
+      <div class="${tcls(r.hours)}">${fmtTime(r.hours)}</div>
+      <div class="${r.isPast?'send-time-past':'send-time-ok'}">
+        ${r.isPast?'⚠️ ':''}<b>${fmtDatetime(r.sendMs)}</b>
+        ${r.isPast?'<div style="font-size:10px;color:#e74c3c;">Heure passée !</div>':''}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('org-rows').innerHTML=rowsHTML;
+  document.getElementById('org-results').style.display='block';
+}
+
+function addSyncPlayer(){
+  syncPc++;const id=syncPc;
+  const players=getPlayers();
+  const opts=players.length?players.map(p=>`<option value="${p.name}|${p.x}|${p.y}|${p.faction}|${p.pt}|${p.boots}">${FACTIONS[p.faction]?.emoji||''} ${p.name} (${p.x}|${p.y})</option>`).join(''):'<option>Ajoute des joueurs dans Saisie</option>';
+  const div=document.createElement('div');
+  div.className='entry';div.id='sp-'+id;
+  div.style.cssText='display:grid;grid-template-columns:2fr 1fr auto;gap:8px;align-items:end;';
+  div.innerHTML=`
+    <div><label>Joueur</label><select id="sp-sel-${id}">${opts}</select></div>
+    <div><label>Type envoi</label><select id="sp-type-${id}">
+      <option value="hero">Héros</option>
+      <option value="off">Troupe off</option>
+      <option value="cata">Catas</option>
+    </select></div>
+    <button class="btn btn-red" onclick="rm('sp-${id}')">✕</button>`;
+  document.getElementById('sync-players-list').appendChild(div);
+}
+
+function calcSync(){
+  const artSel=getArtFromSelect('sync-artefact');
+  const arrStr=document.getElementById('sync-arrival').value;
+  if(!artSel||!arrStr){alert('Sélectionne un artéfact et une heure.');return;}
+  const arrMs=new Date(arrStr).getTime();
+
+  const spRows=[];
+  document.querySelectorAll('[id^="sp-"]').forEach(el=>{
+    const id=el.id.split('-')[1];
+    const sel=document.getElementById('sp-sel-'+id)?.value;
+    const type=document.getElementById('sp-type-'+id)?.value||'off';
+    if(!sel)return;
+    const [name,sx,sy,fac,pt,boots]=sel.split('|');
+    const dist=cheby(parseInt(sx),parseInt(sy),artSel.x,artSel.y);
+    const hours=travelHours(dist,fac,pt,boots,type);
+    const sendMs=arrMs-hours*3600000;
+    const isPast=sendMs<Date.now();
+    spRows.push({name,x:parseInt(sx),y:parseInt(sy),faction:fac,pt:parseInt(pt),boots:parseInt(boots),type,dist,hours,sendMs,isPast});
+  });
+
+  if(!spRows.length){alert('Ajoute des joueurs à synchroniser.');return;}
+  spRows.sort((a,b)=>b.sendMs-a.sendMs); // trier par heure d'envoi décroissante
+
+  const rowsHTML=spRows.map(r=>{
+    const fi=FACTIONS[r.faction]||FACTIONS.hun;
+    const typeLabel=r.type==='hero'?'Héros':r.type==='cata'?'Cata':fi.offUnit;
+    return`<div class="send-result-row">
+      <div>
+        <span style="font-weight:600;">${fi.emoji} ${r.name}</span>
+        <span style="font-size:10px;color:var(--text-dim);margin-left:6px;">${typeLabel} · ${r.dist} cases</span>
+      </div>
+      <div class="dist-value">${r.dist} cases</div>
+      <div class="${tcls(r.hours)}">${fmtTime(r.hours)}</div>
+      <div class="${r.isPast?'send-time-past':'send-time-ok'}">
+        ${r.isPast?'⚠️ ':''}<b>${fmtDatetime(r.sendMs)}</b>
+        ${r.isPast?'<div style="font-size:10px;color:#e74c3c;">Passé !</div>':''}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('sync-rows').innerHTML=rowsHTML;
+  document.getElementById('sync-results').style.display='block';
+}
+
+// ══════════════════════════════════════════════════
+// CARTE
+// ══════════════════════════════════════════════════
+let mapScale=2;
+const w2c=(wx,wy,s)=>({cx:Math.round((wx+MAP_RANGE)*s),cy:Math.round((MAP_RANGE-wy)*s)});
+
 function drawMap(){
-  const players=getPlayers(),artefacts=getArtefacts();
+  const players=getPlayers(),arts=getArtefacts();
   const canvas=document.getElementById('map-canvas');
   const wrap=document.getElementById('map-wrap');
   const ww=wrap.clientWidth||700;
   const total=MAP_RANGE*2+1;
-  if(mapScale<1.5) mapScale=Math.max(1.5,Math.floor(ww/total));
-
+  if(mapScale<1.5)mapScale=Math.max(1.5,Math.floor(ww/total));
   const size=Math.round(total*mapScale);
   canvas.width=size;canvas.height=size;
-
   const ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,size,size);
+  ctx.fillStyle='#06040290';ctx.fillRect(0,0,size,size);
 
-  // Fond
-  ctx.fillStyle='#06040280';
-  ctx.fillRect(0,0,size,size);
-
-  // Grille 50 cases
-  ctx.strokeStyle='rgba(58,46,30,0.3)';ctx.lineWidth=0.5;
+  // Grille 50
+  ctx.strokeStyle='rgba(58,46,30,0.25)';ctx.lineWidth=0.5;
   for(let g=-200;g<=200;g+=50){
     const{cx}=w2c(g,0,mapScale);const{cy}=w2c(0,g,mapScale);
     ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,size);ctx.stroke();
     ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(size,cy);ctx.stroke();
   }
-
   // Axes
-  ctx.strokeStyle='rgba(90,69,32,0.7)';ctx.lineWidth=1;
-  const{cx:ax,cy:ay}=w2c(0,0,mapScale);
-  ctx.beginPath();ctx.moveTo(ax,0);ctx.lineTo(ax,size);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(0,ay);ctx.lineTo(size,ay);ctx.stroke();
+  const{cx:axX,cy:axY}=w2c(0,0,mapScale);
+  ctx.strokeStyle='rgba(90,69,32,0.6)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(axX,0);ctx.lineTo(axX,size);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(0,axY);ctx.lineTo(size,axY);ctx.stroke();
+  // Zone grise
+  const{cx:z0,cy:z1}=w2c(-25,25,mapScale);const{cx:z2,cy:z3}=w2c(25,-25,mapScale);
+  ctx.fillStyle='rgba(201,168,76,0.05)';ctx.fillRect(z0,z1,z2-z0,z3-z1);
+  ctx.strokeStyle='rgba(201,168,76,0.2)';ctx.lineWidth=1;ctx.strokeRect(z0,z1,z2-z0,z3-z1);
 
-  // Zone grise (rayon ~25)
-  const{cx:z0x,cy:z0y}=w2c(-25,25,mapScale);
-  const{cx:z1x,cy:z1y}=w2c(25,-25,mapScale);
-  ctx.fillStyle='rgba(201,168,76,0.05)';
-  ctx.fillRect(z0x,z0y,z1x-z0x,z1y-z0y);
-  ctx.strokeStyle='rgba(201,168,76,0.2)';ctx.lineWidth=1;
-  ctx.strokeRect(z0x,z0y,z1x-z0x,z1y-z0y);
-  ctx.fillStyle='rgba(201,168,76,0.25)';
-  ctx.font=`${Math.max(8,Math.round(mapScale*0.7))}px Cinzel,serif`;
-  ctx.fillText('Zone Grise',z0x+3,z0y+12);
-
-  // Lignes closest player → artefact
-  ctx.setLineDash([4,4]);ctx.lineWidth=1.2;
-  artefacts.forEach(art=>{
-    if(!players.length)return;
+  // Lignes closest
+  ctx.setLineDash([4,4]);ctx.lineWidth=1;
+  arts.forEach(art=>{
     let minD=Infinity,cp=null;
     players.forEach(p=>{const d=cheby(p.x,p.y,art.x,art.y);if(d<minD){minD=d;cp=p;}});
     if(cp){
       const{cx:px,cy:py}=w2c(cp.x,cp.y,mapScale);
-      const{cx:arx,cy:ary}=w2c(art.x,art.y,mapScale);
-      ctx.strokeStyle='rgba(201,168,76,0.4)';
-      ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(arx,ary);ctx.stroke();
+      const{cx:ax,cy:ay}=w2c(art.x,art.y,mapScale);
+      ctx.strokeStyle='rgba(201,168,76,0.35)';
+      ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(ax,ay);ctx.stroke();
     }
   });
   ctx.setLineDash([]);
 
-  const dr=Math.max(4,mapScale*0.65);
-  const ar=Math.max(5,mapScale*0.85);
+  const dr=Math.max(4,mapScale*0.6);
+  const ar=Math.max(5,mapScale*0.8);
 
-  // Joueurs
   players.forEach(p=>{
     const{cx,cy}=w2c(p.x,p.y,mapScale);
     const ri=ROLES[p.role]||ROLES.other;
     ctx.beginPath();ctx.arc(cx,cy,dr,0,Math.PI*2);
     ctx.fillStyle=ri.col;ctx.fill();
-    ctx.strokeStyle='rgba(0,0,0,0.6)';ctx.lineWidth=1;ctx.stroke();
+    ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=1;ctx.stroke();
     if(mapScale>=3){
       ctx.fillStyle='rgba(212,196,160,0.9)';
       ctx.font=`${Math.round(mapScale*1.1)}px Cinzel,serif`;
@@ -542,39 +980,34 @@ function drawMap(){
     }
   });
 
-  // Artéfacts (losange étoilé)
   const artCols={small:'#6aafe6',large:'#e67a6a',unique:'#e8c96a'};
-  artefacts.forEach(art=>{
+  arts.forEach(art=>{
     const{cx,cy}=w2c(art.x,art.y,mapScale);
     const col=artCols[art.size]||'#e8c96a';
     ctx.save();ctx.translate(cx,cy);
     ctx.beginPath();
     const r1=ar*1.4,r2=ar*0.55;
     for(let i=0;i<8;i++){
-      const ang=(i*Math.PI/4)-Math.PI/2;
-      const r=i%2===0?r1:r2;
+      const ang=(i*Math.PI/4)-Math.PI/2,r=i%2===0?r1:r2;
       i===0?ctx.moveTo(Math.cos(ang)*r,Math.sin(ang)*r):ctx.lineTo(Math.cos(ang)*r,Math.sin(ang)*r);
     }
-    ctx.closePath();
-    ctx.fillStyle=col;ctx.fill();
+    ctx.closePath();ctx.fillStyle=col;ctx.fill();
     ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=1;ctx.stroke();
     ctx.restore();
     if(mapScale>=2.5){
-      ctx.fillStyle=col;
-      ctx.font=`bold ${Math.round(mapScale*1.05)}px Cinzel,serif`;
-      ctx.fillText(art.name,cx+ar+4,cy+4);
+      ctx.fillStyle=col;ctx.font=`bold ${Math.round(mapScale)}px Cinzel,serif`;
+      ctx.fillText(art.name,cx+ar+3,cy+4);
     }
   });
 
   // Labels axes
-  ctx.fillStyle='rgba(100,80,40,0.8)';
-  ctx.font=`${Math.max(9,Math.round(mapScale*0.65))}px Cinzel,serif`;
+  ctx.fillStyle='rgba(100,80,40,0.7)';ctx.font=`${Math.max(9,Math.round(mapScale*0.6))}px Cinzel,serif`;
   for(let g=-200;g<=200;g+=50){
-    const{cx:lx}=w2c(g,0,mapScale);const{cy:ly}=w2c(0,g,mapScale);
-    if(g!==0){ctx.fillText(String(g),lx+2,ay-2);ctx.fillText(String(g),ax+3,ly-2);}
+    if(g===0)continue;
+    const{cx}=w2c(g,0,mapScale);const{cy}=w2c(0,g,mapScale);
+    ctx.fillText(g,cx+2,axY-2);ctx.fillText(g,axX+2,cy-2);
   }
-
-  setupMapInteraction(players,artefacts);
+  setupMapInteraction(players,arts);
 }
 
 function zoomMap(f){mapScale*=f;drawMap();}
@@ -584,36 +1017,33 @@ function resetZoom(){
   drawMap();
 }
 
-function setupMapInteraction(players,artefacts){
+function setupMapInteraction(players,arts){
   const canvas=document.getElementById('map-canvas');
   const tt=document.getElementById('tt');
   const hitR=Math.max(8,mapScale);
-
   canvas.onmousemove=e=>{
     const rect=canvas.getBoundingClientRect();
     const mx=e.clientX-rect.left,my=e.clientY-rect.top;
     let found=null;
-
-    artefacts.forEach(art=>{
+    const sL={small:'Petit',large:'Grand',unique:'Unique'};
+    arts.forEach(art=>{
       const{cx,cy}=w2c(art.x,art.y,mapScale);
       if(Math.abs(mx-cx)<hitR&&Math.abs(my-cy)<hitR){
-        const sL={small:'Petit',large:'Grand',unique:'Unique'};
         let minD=Infinity,cn='—';
         players.forEach(p=>{const d=cheby(p.x,p.y,art.x,art.y);if(d<minD){minD=d;cn=p.name;}});
-        found={name:`💎 ${art.name}`,detail:`Coords : (${art.x}|${art.y}) · ${sL[art.size]}<br>👑 Plus proche : <b>${cn}</b> (${minD} cases)`};
+        found={name:`💎 ${art.name}`,detail:`(${art.x}|${art.y}) · ${sL[art.size]}<br>👑 Plus proche : <b>${cn}</b> (${minD} cases)`};
       }
     });
-
     players.forEach(p=>{
       const{cx,cy}=w2c(p.x,p.y,mapScale);
       if(Math.abs(mx-cx)<hitR&&Math.abs(my-cy)<hitR){
         const ri=ROLES[p.role]||ROLES.other;
+        const fi=FACTIONS[p.faction]||FACTIONS.hun;
         let minD=Infinity,ca='—';
-        artefacts.forEach(a=>{const d=cheby(p.x,p.y,a.x,a.y);if(d<minD){minD=d;ca=a.name;}});
-        found={name:`🏰 ${p.name}`,detail:`Coords : (${p.x}|${p.y}) · <b>${ri.label}</b><br>PT niv.${p.pt||0}<br>💎 Artéfact le + proche : <b>${ca}</b> (${minD} cases)`};
+        arts.forEach(a=>{const d=cheby(p.x,p.y,a.x,a.y);if(d<minD){minD=d;ca=a.name;}});
+        found={name:`${fi.emoji} ${p.name}`,detail:`(${p.x}|${p.y}) · <b>${ri.label}</b> · ${fi.label}<br>PT niv.${p.pt} · Bottes P${p.boots}<br>💎 + proche : <b>${ca}</b> (${minD} cases)`};
       }
     });
-
     if(found){
       tt.style.display='block';tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-10)+'px';
       document.getElementById('tn').textContent=found.name;
@@ -622,25 +1052,19 @@ function setupMapInteraction(players,artefacts){
     }else{tt.style.display='none';canvas.style.cursor='grab';}
   };
   canvas.onmouseleave=()=>{tt.style.display='none';};
-
-  // Pan
   const wrap=document.getElementById('map-wrap');
   let drag=false,sx,sy,sl,st;
   wrap.onmousedown=e=>{drag=true;sx=e.pageX-wrap.offsetLeft;sy=e.pageY-wrap.offsetTop;sl=wrap.scrollLeft;st=wrap.scrollTop;wrap.style.cursor='grabbing';};
-  window.onmouseup=()=>{drag=false;wrap.style.cursor='grab';};
-  wrap.onmousemove=e=>{
-    if(!drag)return;e.preventDefault();
-    wrap.scrollLeft=sl-(e.pageX-wrap.offsetLeft-sx);
-    wrap.scrollTop=st-(e.pageY-wrap.offsetTop-sy);
-  };
+  window.onmouseup=()=>{drag=false;};
+  wrap.onmousemove=e=>{if(!drag)return;e.preventDefault();wrap.scrollLeft=sl-(e.pageX-wrap.offsetLeft-sx);wrap.scrollTop=st-(e.pageY-wrap.offsetTop-sy);};
 }
 
-// ════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 // INIT
-// ════════════════════════════════════════════════
-addPlayer('NoGodNoMaster – Bh3','cdt20',-12,45,5);
-addPlayer('Allié1 – Capital','off',30,-20,0);
-addPlayer('Allié2 – Village Off','offcata',-80,10,3);
+// ══════════════════════════════════════════════════
+addPlayer('NoGodNoMaster – Bh3','cdt20','hun',-12,45,5,1);
+addPlayer('Allié1 – Capital','off','roman',30,-20,0,0);
+addPlayer('Allié2 – Village Off','offcata','gaul',-80,10,3,2);
 addArtefact('Bottes du Messager',50,80,'small');
 addArtefact('Grande Diète',-100,-60,'large');
 </script>
